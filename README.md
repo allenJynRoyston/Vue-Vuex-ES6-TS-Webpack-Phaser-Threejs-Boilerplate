@@ -10,8 +10,25 @@ $ gulp
 OR
 $ npm run dev
 ```
-### Preload assets 
+### Preload assets *optional*
 You can preload your images in src/App.vue.  This will automatically trigger the overlay to blur your site until anything contained in the array is fully loaded.  You can also alter the look/feel of the overlay by editing the src/components/Overlay.vue
+
+You can disable this effect by removing these two lines of code in the src/App.vue file.
+```
+  data() {
+    return {
+      appReady: false,
+      store: this.$store,
+      images: [
+        test_image
+      ]
+    }
+  },
+  mounted(){
+    //this.store.commit('overlay_on')
+    //this.imageLoader(this.images, this.finishedLoading)
+  },
+```
 
 ### Vuex store
 Vuex is included by default. You'll find it located in src/store/store.js
