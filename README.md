@@ -48,7 +48,7 @@ You can disable this effect by removing these two lines of code in the src/App.v
       appReady: false,
       store: this.$store,
       images: [
-        test_image
+        image1, image2, image3
       ]
     }
   },
