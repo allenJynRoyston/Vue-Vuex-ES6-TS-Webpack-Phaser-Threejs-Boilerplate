@@ -1,15 +1,24 @@
-# Vue + Vuex / ES6 / Webpack / Phaser / SemanticUI / Express4
+# Vue + Vuex / ES6 / Webpack / Phaser / SemanticUI / VelocityJS / Express4
 
 ### Install instructions:
 ```sh
 $ git clone https://github.com/allenRoyston/vue-vuex-webpack-es6-phaser-boilerplate.git
 $ cd vue-vuex-webpack-es6-phaser-boilerplate
 $ npm install
-$ gulp build
-$ gulp  
-OR
-$ npm run dev
+$ npm run dev (USE THIS WHEN DEVELOPING)
 ```
+
+### Deployment instructions:
+```sh
+$ gulp build
+
+// TO PREVIEW WITH BUILD SCRIPT
+$ npm start
+OR 
+$ gulp
+```
+
+
 ### Preload assets *optional*
 You can preload your images in src/App.vue.  This will automatically trigger the overlay to blur your site until anything contained in the array is fully loaded.  You can also alter the look/feel of the overlay by editing the src/components/Overlay.vue
 
@@ -85,8 +94,5 @@ The src/components/GameComponent.vue file will load your phaser file, so you can
 ### When to use gulp vs npm run dev
 Webpack won't instantiate the Express server, so any endpoints you need to access will be returned as a 404.  If you can don't need access to endpoints, I'd recommened npm run dev since it's much faster.  
 
-### Deployment instructions:
-```sh
-$ gulp build
-$ npm start
-```
+### Build size
+Final size is ~945kb, which admittedly sounds a little big, but not bad considering you're getting jQuery/Phaser/Velocity/SemanticUI/Vue/Vuex all included.  
