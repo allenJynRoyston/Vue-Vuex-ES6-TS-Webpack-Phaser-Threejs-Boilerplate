@@ -1,0 +1,32 @@
+@import './reset.css';
+@import '../semanticui/dist/semantic.min.css';
+
+.is-cursor{
+  cursor: pointer;
+}
+
+.invisible{
+  opacity: 0;
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+._outline{
+  border: 2px solid red ;
+}
+
+.is-large{
+  font-size: 3em;
+}
+
+.is-bold{
+  font-weight: bold;
+  color: orange;
+  font-size: 1.25em;
+}
+
+.text-2{
+  font-family: 'Josefin Slab', serif!important;
+  font-size: 3em;
+}
