@@ -14,7 +14,26 @@ $ npm run dev
 You can preload your images in src/App.vue.  This will automatically trigger the overlay to blur your site until anything contained in the array is fully loaded.  You can also alter the look/feel of the overlay by editing the src/components/Overlay.vue
 
 ### Vuex store
-Vuex is included by default.  When creating a new component, just make sure you have declared to be able to use it.
+Vuex is included by default. You'll find it located in src/store/store.js
+You'll find adding to or removing properties from the Store is easy.  
+```
+export default new Vuex.Store({
+  state: {
+    name: null
+  },
+  getters: {
+    _name: state => () => state.name,
+  },
+  mutations: {
+    setName(state, value){
+      state.name = value
+    },
+  }
+})
+
+```
+
+Make sure you declare it in a component before using it.  
 ```
   data() {
     return {
@@ -25,14 +44,21 @@ Vuex is included by default.  When creating a new component, just make sure you 
 
 Changing a property in the store is easy:
 ```
- this.store.commit('<functionName>', value)
+ this.store.commit('setName', 'Allen')
 ```
 
-And watching fot changes is equally as easy:
+And watching fot changes is equally as easy.  Just place this in your mounted() state:
 ```
-  this.store.watch(this.store.getters._<functionName>, val => {
-    console.log("Change detected: " + val)
-  })
+  data () {
+    return {
+      store: this.$store,
+    }
+  },
+  mounted(){
+    this.store.watch(this.store.getters._name, val => {
+      console.log(val)  // "Allen"
+    })
+  }
 ```
 
 
