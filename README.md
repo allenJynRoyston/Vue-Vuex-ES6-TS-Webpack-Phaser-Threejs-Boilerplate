@@ -92,7 +92,7 @@ Changing a property in the store is easy:
  this.store.commit('setName', 'Allen')
 ```
 
-And watching fot changes is equally as easy.  Just place this in your mounted() state:
+And watching for changes is equally as easy.  Just place this in your mounted() state:
 ```
   data () {
     return {
