@@ -10,6 +10,18 @@ $ gulp
 OR
 $ npm run dev
 ```
+### Preload assets 
+You can preload your images in src/App.vue.  This will automatically trigger the overlay to blur your site until anything contained in the array is fully loaded.  You can also alter the look/feel of the overlay by editing the src/components/Overlay.vue
+
+### Vuex store
+Vuex is included by default.  When creating a new component, just make sure you have 
+```
+  data() {
+    return {
+      store: this.$store,
+    }
+  },
+```
 
 ### Build the Phaser file independently
 The src/components/GameComponent.vue file will load your phaser file, so you can create/build/test it independently before pushing it live on the site.  Game will be destroyed when leaving the page so you don't need to worry about cleanup.  
