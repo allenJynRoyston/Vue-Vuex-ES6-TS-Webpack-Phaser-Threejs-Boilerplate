@@ -1,5 +1,8 @@
 # Vue + Vuex / ES6 / Webpack / Phaser / SemanticUI / VelocityJS / Express4
 
+### Preview
+[Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/)
+
 ### Install instructions:
 ```sh
 $ git clone https://github.com/allenRoyston/vue-vuex-webpack-es6-phaser-boilerplate.git
