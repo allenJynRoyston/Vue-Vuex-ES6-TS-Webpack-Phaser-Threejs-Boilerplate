@@ -19,8 +19,8 @@ $ gulp
 ```
 
 
-### Preload assets -*optional*-
-You can preload your images in src/App.vue.  This will automatically trigger the overlay to blur your site until anything contained in the array is fully loaded.  You can also alter the look/feel of the overlay by editing the src/components/Overlay.vue
+### Preload image assets -*optional*-
+If your site is going to be visually heavy, you can preload your images in src/App.vue.  This will automatically trigger the overlay to blur your site until anything contained in the array is fully loaded.  You can also alter the look/feel of the overlay by editing the src/components/Overlay.vue
 
 ```
 import image1 from "./assets/images/misc/image1.png"
