@@ -71,11 +71,5 @@ Webpack won't instantiate the Express server, so any endpoints you need to acces
 ### Deployment instructions:
 ```sh
 $ gulp build
-$ git push heroku master
-```
-
-### Deployment preview (what you see is what you'll get):
-```sh
-$ gulp build
 $ npm start
 ```
