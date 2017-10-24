@@ -115,3 +115,5 @@ Webpack won't instantiate the Express server, so any endpoints you need to acces
 
 ### Build size
 Final size is ~945kb, which admittedly sounds a little big, but not bad considering you're getting jQuery/Phaser/Velocity/SemanticUI/Vue/Vuex all included.  
+
+Games built in the Phaser folder are loaded independently of the site it will not be added to the build.  You can build your own preloaders in Phaser.  
