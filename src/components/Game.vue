@@ -1,7 +1,7 @@
 <template lang="pug">
   .ui.container.game-container
     center
-      game-component(v-if='isReady')
+      game-component
 </template>
 
 <script>
@@ -12,25 +12,16 @@ export default {
   data () {
     return {
       store: this.$store,
-      isReady: false
     }
   },
   methods: {
 
   },
   mounted(){
-    $('#app-layout').velocity('stop', true)
-    $('#app-layout').velocity({backgroundColor: '#1e1e1e'}, 2000)
-    this.store.commit('setHeader', false)
-    setTimeout( () => {
-      this.isReady = true
-    }, 2000)
+    this.isReady = true
   },
   destroyed(){
-    $('#app-layout').velocity('stop', true)
-    $('#app-layout').velocity({backgroundColor: '#ffffff'}, 0)
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
+
   }
 }
 </script>

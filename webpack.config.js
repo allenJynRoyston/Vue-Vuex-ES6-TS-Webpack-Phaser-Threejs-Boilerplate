@@ -50,8 +50,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js',
-      'eventEmitter/EventEmitter': 'wolfy87-eventemitter'
+      'vue$': 'vue/dist/vue.esm.js'
     }
   },
   devServer: {
