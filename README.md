@@ -19,7 +19,7 @@ $ gulp
 ```
 
 
-### Preload assets *optional*
+### Preload assets -*optional*-
 You can preload your images in src/App.vue.  This will automatically trigger the overlay to blur your site until anything contained in the array is fully loaded.  You can also alter the look/feel of the overlay by editing the src/components/Overlay.vue
 
 You can disable this effect by removing these two lines of code in the src/App.vue file.
