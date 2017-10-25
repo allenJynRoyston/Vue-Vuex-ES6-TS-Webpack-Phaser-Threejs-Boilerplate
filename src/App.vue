@@ -1,10 +1,9 @@
 <template lang='pug'>
-  #app-layout.ui.blurring.content
+  #app-layout
     overlay
     main-header
     navigation
-    .ui.container
-      router-view
+    router-view
     main-footer
 </template>
 
@@ -17,7 +16,6 @@ export default {
   name: 'app',
   data() {
     return {
-      appReady: false,
       store: this.$store,
       images: [
         test_image
@@ -62,9 +60,8 @@ export default {
     },
     finishedLoading(res){
       // toggle off overlay
-      this.appReady = true;
       this.store.commit('setAppState', true)
-      this.store.commit('overlay_off')      
+      this.store.commit('overlay_off')
     }
   }
 }
@@ -75,10 +72,5 @@ export default {
 </style>
 
 <style lang="sass" scoped>
-  .container
-    max-width: 1200px
-    margin-left: auto
-    margin-right: auto
-  .content
-    min-height: 1000px
+
 </style>

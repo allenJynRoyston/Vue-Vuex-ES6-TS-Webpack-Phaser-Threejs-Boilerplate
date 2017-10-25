@@ -1,18 +1,21 @@
 <template lang="pug">
-  center
-    h1 Header
+  .u-full-width.demo-panel
+    h3 Header
+    img(v-bind:src='shortParagraph1')
 </template>
 
 <script>
+import shortParagraph1 from "../assets/images/site/short-paragraph.png"
 
 export default {
   name: 'main-header',
   data () {
     return {
       store: this.$store,
+      shortParagraph1: shortParagraph1
     }
   },
-  mounted(){
+  created: function () {
 
   },
   methods: {
@@ -23,5 +26,8 @@ export default {
 
 
 <style lang="sass" scoped>
-
+  .demo-panel
+    padding: 20px
+    overflow: hidden
+    text-align: center
 </style>
