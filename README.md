@@ -1,4 +1,10 @@
-# Vue + Vuex / ES6 / Webpack / Phaser / SemanticUI / VelocityJS / Express4
+### Technologies included
+- Vue + Vuex (with ES6)
+- Webpack
+- Skeleton CSS / Velocity
+- Phaser / Threejs
+- Express
+- Font Awesome
 
 ### Preview
 [Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/#/fun)
