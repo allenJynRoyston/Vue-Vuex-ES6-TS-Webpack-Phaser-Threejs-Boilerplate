@@ -1,6 +1,9 @@
 <template lang="pug">
   .container
     .row
+      .twelve.columns.demo-panel
+        h1 Home
+    .row
       .six.columns.demo-panel
         p Content
         img(v-bind:src='shortParagraph1')

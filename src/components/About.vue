@@ -1,19 +1,34 @@
 <template lang="pug">
-  center
-    h1 About
+  .container
+    .row
+      .twelve.columns.demo-panel
+        h1 About
+    .row
+      .six.columns.demo-panel
+        p Content
+        img(v-bind:src='shortParagraph1')
+      .six.columns.demo-panel
+        p Content
+        img(v-bind:src='shortParagraph1')
+    .row
+      .six.columns.demo-panel
+        p Content
+        img(v-bind:src='shortParagraph1')
+      .six.columns.demo-panel
+        p Content
+        img(v-bind:src='shortParagraph1')
 </template>
 
 <script>
+import shortParagraph1 from "../assets/images/site/short-paragraph.png"
 
 export default {
-  name: 'aboutme',
+  name: 'home',
   data () {
     return {
-      store: this.$store
+      store: this.$store,
+      shortParagraph1: shortParagraph1
     }
-  },
-  created() {
-
   },
   methods: {
 
@@ -21,7 +36,8 @@ export default {
 }
 </script>
 
-
 <style lang="sass" scoped>
-
+  .demo-panel
+    padding: 20px
+    overflow: hidden
 </style>
