@@ -118,11 +118,14 @@ And watching for changes is equally as easy.  Just place this in your mounted() 
 ```
 
 
-### Build the Phaser file independently
-The src/components/GameComponent.vue file will load your phaser file, so you can create/build/test it independently before pushing it live on the site.  Game will be destroyed when leaving the page so you don't need to worry about cleanup.  Think of it this way:  the app is the console and the file is the cartridge.  
+### Build the Phaser/ThreeJS file independently
+Phaser and ThreeJS files (located in src/phaser and src/threeJS respectively) can be built independently of the app.  Think of it as the app being a console and the file being the cartridge.  This has several benefits:  
+- You can use other build tools (like Typescript) to compile to the file you want to use.  This will provide a better dev experience than vanilla javascript (at least for highly complex projects).
+- You can load games in sequence, or build smaller segments of games, and launch them in any order you need.  Think intro > cutscene > gameplay > gameover > etc etc.
+
 
 ### When to use gulp vs npm run dev
-Webpack won't instantiate the Express server, so any endpoints you need to access will be returned as a 404.  If you can don't need access to endpoints, I'd recommened npm run dev since it's much faster.  
+Webpack won't instantiate the Express server, so any endpoints you build in Express will be returned as a 404.  If you run Gulp, it will start the server and load your app.  However, any changes you make to components will cause Webpack to rerun - and it is quite slow.  You only need this if you're building out endpoints, otherwise stick with npm run dev.
 
 ### Build size
 Final size is ~945kb, which admittedly sounds a little big, but not bad considering you're getting jQuery/Phaser/Velocity/SemanticUI/Vue/Vuex all included.  
