@@ -3,9 +3,9 @@
     .hero-body
       .container
         h1.title
-          | Home
+          | Vue + Vuex
         h2.subtitle
-          | Hero Panel
+          | Game Creation Suite
         a.button(@click='toggleModal()')
           | Get Started
 
