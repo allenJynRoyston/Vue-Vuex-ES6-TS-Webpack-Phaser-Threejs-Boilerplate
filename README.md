@@ -1,4 +1,10 @@
-# Vue + Vuex / ES6 / Webpack / Phaser / SemanticUI / VelocityJS / Express4
+### Technologies included
+- Vue + Vuex (with ES6)
+- Webpack
+- Skeleton CSS / Velocity
+- Phaser / Threejs
+- Express
+- Font Awesome
 
 ### Preview
 [Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/#/fun)
@@ -111,7 +117,7 @@ And watching for changes is equally as easy.  Just place this in your mounted() 
 
 
 ### Build the Phaser file independently
-The src/components/GameComponent.vue file will load your phaser file, so you can create/build/test it independently before pushing it live on the site.  Game will be destroyed when leaving the page so you don't need to worry about cleanup.  
+The src/components/GameComponent.vue file will load your phaser file, so you can create/build/test it independently before pushing it live on the site.  Game will be destroyed when leaving the page so you don't need to worry about cleanup.  Think of it this way:  the app is the console and the file is the cartridge.  
 
 ### When to use gulp vs npm run dev
 Webpack won't instantiate the Express server, so any endpoints you need to access will be returned as a 404.  If you can don't need access to endpoints, I'd recommened npm run dev since it's much faster.  
