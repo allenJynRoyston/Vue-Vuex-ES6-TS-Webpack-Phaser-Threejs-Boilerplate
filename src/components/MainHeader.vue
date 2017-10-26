@@ -6,8 +6,20 @@
           | Home
         h2.subtitle
           | Hero Panel
-        a.button
+        a.button(@click='toggleModal()')
           | Get Started
+
+    .modal(v-bind:class='modalIsOpen ? "is-active" : ""')
+      .modal-background
+      .modal-card
+        header.modal-card-head
+          p.modal-card-title Modal title
+          button.delete(aria-label='close' @click='toggleModal()')
+        section.modal-card-body
+          h1 Content
+        footer.modal-card-foot
+          button.button.is-success Save changes
+          button.button(@click='toggleModal()') Cancel
 </template>
 
 <script>
@@ -17,15 +29,18 @@ export default {
   name: 'main-header',
   data () {
     return {
+      modalIsOpen: false,
       store: this.$store,
       shortParagraph1: shortParagraph1
     }
   },
-  created: function () {
+  created() {
 
   },
   methods: {
-
+    toggleModal() {
+      this.modalIsOpen = !this.modalIsOpen;
+    }
   }
 }
 </script>

@@ -8,7 +8,9 @@
       a(@click='setHeader(false)')
         router-link(to="/about") About
       a(@click='setHeader(false)')
-        router-link(to="/fun") Phaser
+        router-link(to="/phaser") Phaser
+      a(@click='setHeader(false)')
+        router-link(to="/three") Three        
       a.right-link(@click='setHeader(!headerIsOpen)')
         i(v-bind:class='headerIsOpen  ? "window restore icon" : "maximize icon"')
 </template>

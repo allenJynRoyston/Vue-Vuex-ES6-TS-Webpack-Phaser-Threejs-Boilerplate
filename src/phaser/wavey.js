@@ -1,25 +1,26 @@
 //--------------
 __phaser = {
 
-    gameObj: null,
+    self: null,
     global:{
       isPaused: false
     },
 
     //-------------------
-    game:{
+    main:{
 
       //-------------------
-      init(canvasEle, vueComponent, options){
+      init(el, parent, options){
 
 
             //----------------------- assign variables
-            var game = new Phaser.Game(800, 500, Phaser.WEBGL, canvasEle, { create: create, update: update });
+            var dimensions = {width: options.width, height: options.height}
+            var game = new Phaser.Game(dimensions.width, dimensions.height, Phaser.WEBGL, el, { create: create, update: update });
             var filter;
             var sprite;
 
-            __phaser.gameObj = game;
-            vueComponent.game = __phaser;
+            __phaser.self = game;
+            parent.game = __phaser;
             //-----------------------
 
 
@@ -56,11 +57,11 @@ __phaser = {
                   ];
 
                   sprite = game.add.sprite();
-                  sprite.width = 2500;
-                  sprite.height = 500;
+                  sprite.width = dimensions.width;
+                  sprite.height = dimensions.height;
 
                   filter = new Phaser.Filter(game, null, fragmentSrc);
-                  filter.setResolution(800, 600);
+                  filter.setResolution(dimensions.width, dimensions.height);
 
                   sprite.filters = [ filter ];
             }
@@ -94,7 +95,7 @@ __phaser = {
 
     //-------------------
     destroy(){
-      this.gameObj.destroy();
+      __phaser.self.destroy();
       return true
     }
     //-------------------

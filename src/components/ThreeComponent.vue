@@ -1,12 +1,12 @@
 <template lang="pug">
-    #phaser-example
+    #three-example
 </template>
 
 <script>
 
 
 export default {
-  name: 'gameComponent',
+  name: 'threeComponent',
   props: [],
   data () {
     return {
@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     init(){
-      this.loadGame('wavey.js')
+      this.loadGame('demo.js')
     },
     loadGame(fileName){
       // remove old game first
@@ -28,10 +28,10 @@ export default {
       // load new one
       let js = document.createElement("script");
           js.type = "text/javascript";
-          js.src = `src/phaser/${fileName}`;
+          js.src = `src/threeJS/${fileName}`;
           document.body.appendChild(js);
           js.onload = (() => {
-            __phaser.main.init(this.$el, this, {width: 800, height: 600});
+            __three.main.init(this.$el, this, {width: 800, height: 600});
           })
     }
   },
@@ -43,5 +43,7 @@ export default {
 
 
 <style lang="sass" scoped>
-
+  #three-example
+    width: 800px
+    height: 600px
 </style>
