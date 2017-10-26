@@ -1,7 +1,7 @@
 ### Technologies included
 - Vue + Vuex (with ES6)
 - Webpack
-- Skeleton CSS / Velocity
+- Bulma CSS / Velocity 
 - Phaser / Threejs
 - Express
 - Font Awesome
