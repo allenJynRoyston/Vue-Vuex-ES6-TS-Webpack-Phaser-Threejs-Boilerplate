@@ -1,7 +1,13 @@
 <template lang="pug">
-  .u-full-width.demo-panel
-    h3 Header
-    img(v-bind:src='shortParagraph1')
+  section.hero.is-primary
+    .hero-body
+      .container
+        h1.title
+          | Home
+        h2.subtitle
+          | Hero Panel
+        a.button
+          | Get Started
 </template>
 
 <script>
@@ -26,8 +32,5 @@ export default {
 
 
 <style lang="sass" scoped>
-  .demo-panel
-    padding: 20px
-    overflow: hidden
-    text-align: center
+
 </style>

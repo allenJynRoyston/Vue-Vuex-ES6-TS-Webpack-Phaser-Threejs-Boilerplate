@@ -1,5 +1,5 @@
 @import './normalize.css';
-@import './skeleton.css';
+@import '../../../node_modules/bulma/css/bulma.css';
 
 .center-text{
   text-align: center
