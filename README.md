@@ -1,8 +1,10 @@
 ### Technologies included
 - Vue + Vuex (with ES6)
 - Webpack
-- Bulma CSS / Velocity 
-- Phaser / Threejs
+- [Bulma CSS](https://bulma.io/)
+- [Velocity](http://velocityjs.org/)
+- [Phaser](https://phaser.io/)
+- [Threejs](https://threejs.org/)
 - Express
 - Font Awesome
 
