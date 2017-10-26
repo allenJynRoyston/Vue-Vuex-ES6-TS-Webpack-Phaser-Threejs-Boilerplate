@@ -1,8 +1,10 @@
 <template lang="pug">
   #overlay(v-bind:class='isActive ? "visible" : "hidden"')
     .loading-container
-      .loading-text
-        h1 Loading... {{progress}}%
+      p
+        span.fa.fa-spinner.fa-pulse.fa-fw
+      progress.progress.is-success(v-bind:value="progress" max="100")
+
 </template>
 
 <script>
@@ -41,7 +43,7 @@ export default {
     text-align: center
     background-color: white
 
-  .loading-text
+  .loading-container
     margin-top: 50px
 
   .visible
