@@ -7,6 +7,7 @@
 - [Threejs](https://threejs.org/)
 - Express
 - Font Awesome
+- Jasmine (Unit testing)
 
 ### Preview
 [Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/#/fun)
@@ -117,6 +118,11 @@ And watching for changes is equally as easy.  Just place this in your mounted() 
   }
 ```
 
+### Unit testing
+Simple to start and expand.  
+```
+$ npm run test
+```
 
 ### Build the Phaser/ThreeJS file independently
 Phaser and ThreeJS files (located in src/phaser and src/threeJS respectively) can be built independently of the app.  Think of it as the app being a console and the file being the cartridge.  This has several benefits:  
