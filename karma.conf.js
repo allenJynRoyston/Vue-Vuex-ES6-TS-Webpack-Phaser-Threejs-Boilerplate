@@ -7,10 +7,10 @@ module.exports = function(config) {
     basePath: '',
     frameworks: ['jasmine'],
     files: [
-      './test/*.js'
+      './test/*.spec.js'
     ],
     preprocessors: {
-      './test/*.js' : ['webpack']
+      './test/*.spec.js' : ['webpack']
     },
     webpack: webpackConfig,
     exclude: [
