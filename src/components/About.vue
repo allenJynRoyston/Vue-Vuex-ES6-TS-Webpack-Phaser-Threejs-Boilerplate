@@ -41,6 +41,7 @@ export default {
   name: 'home',
   data () {
     return {
+      test: 'hello world',
       store: this.$store,
       shortParagraph1: shortParagraph1
     }
