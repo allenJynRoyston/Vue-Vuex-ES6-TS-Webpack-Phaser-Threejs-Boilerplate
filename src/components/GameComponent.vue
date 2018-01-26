@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     init(){
-      this.loadGame('wavey.js')
+      this.loadGame('ts_demo.js')
     },
     loadGame(fileName){
       // remove old game first
@@ -31,7 +31,7 @@ export default {
           js.src = `src/phaser/${fileName}`;
           document.body.appendChild(js);
           js.onload = (() => {
-            __phaser.main.init(this.$el, this, {width: 800, height: 600});
+            __phaser.init(this.$el, this, {width: 800, height: 600});
           })
     }
   },

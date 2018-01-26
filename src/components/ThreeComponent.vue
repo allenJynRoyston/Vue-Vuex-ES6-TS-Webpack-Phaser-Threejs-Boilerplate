@@ -18,9 +18,9 @@ export default {
   },
   methods: {
     init(){
-      this.loadGame('demo.js')
+      this.loadGame('src/threeJS/ts_demo.js')
     },
-    loadGame(fileName){
+    loadGame(fileLocation){
       // remove old game first
       if(this.game !== null){
         this.game.destroy()
@@ -28,10 +28,10 @@ export default {
       // load new one
       let js = document.createElement("script");
           js.type = "text/javascript";
-          js.src = `src/threeJS/${fileName}`;
+          js.src = `${fileLocation}`;
           document.body.appendChild(js);
           js.onload = (() => {
-            __three.main.init(this.$el, this, {width: 800, height: 600});
+            __three.init(this.$el, this, {width: 800, height: 600});
           })
     }
   },
