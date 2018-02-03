@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     init(){
-      this.loadGame('ts_demo.js')
+      this.loadGame('gameTemplate.js')
     },
     loadGame(fileName){
       // remove old game first
