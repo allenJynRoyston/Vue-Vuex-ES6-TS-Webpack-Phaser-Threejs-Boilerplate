@@ -4,6 +4,7 @@ dist/
 npm-debug.log
 yarn-error.log
 __.git
+src/phaser_Buildtool/node_modules/
 
 # Editor directories and files
 .idea
