@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     init(){
-      this.loadGame('boilerplate/test.js')
+      this.loadGame('boilerplate/gameTemplate.js')
     },
     loadGame(fileName){
       // remove old game first
