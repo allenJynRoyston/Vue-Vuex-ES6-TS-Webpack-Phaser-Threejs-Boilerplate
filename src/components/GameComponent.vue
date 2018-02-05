@@ -31,7 +31,7 @@ export default {
           js.src = `src/phaser/${fileName}`;
           document.body.appendChild(js);
           js.onload = (() => {
-            __phaser.init(this.$el, this, {width: 800, height: 600});
+            __phaser.init(this.$el, this, {width: 640, height: 480});
           })
     }
   },

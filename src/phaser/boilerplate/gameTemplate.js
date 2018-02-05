@@ -6,68 +6,80 @@ var PhaserGameObject = (function () {
         };
     }
     PhaserGameObject.prototype.init = function (el, parent, options) {
-        var game = new Phaser.Game(options.width, options.height, Phaser.WEBGL, el, { preload: preload, update: update });
-        var _IO_CONTROLS = new IO_CONTROLS();
-        var IO;
-        var gameStates = {
-            BOOT: 'BOOT',
-            PRELOAD: 'PRELOAD',
-            READY: 'READY',
-        };
-        var properties = {
-            state: gameStates.BOOT,
-            input: {
-                delay: 0,
-                delayValue: 100
-            }
-        };
-        var gameTitle;
+        var phaserMaster = new PHASER_MASTER({ game: new Phaser.Game(options.width, options.height, Phaser.WEBGL, el, { preload: preload, update: update }), resolution: { width: options.width, height: options.height } }), phaserControls = new PHASER_CONTROLS(), phaserSprites = new PHASER_SPRITE_MANAGER(), phaserTexts = new PHASER_TEXT_MANAGER();
         function preload() {
+            var game = phaserMaster.game();
             game.load.enableParallel = true;
             game.stage.backgroundColor = '#2f2f2f';
-            game.load.image('gametitle', 'src/assets/game/demo1/titles/100x100.jpg');
+            game.load.image('gameTitle', 'src/assets/game/demo1/titles/100x100.jpg');
             game.load.audio('intro-music', ['src/assets/game/demo1/music/far-sight.ogg']);
             game.load.audio('select', ['src/assets/game/demo1/sound/Pickup_Coin.ogg']);
-            game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
-            window.WebFontConfig = {
-                active: function () { },
-                google: {
-                    families: ['Press Start 2P']
-                }
-            };
-            properties.state = gameStates.PRELOAD;
+            game.load.bitmapFont('gem', 'src/assets/fonts/gem.png', 'src/assets/fonts/gem.xml');
+            phaserMaster.setState('PRELOAD');
             new PHASER_PRELOADER({ game: game, delayInSeconds: 0, done: function () { preloadComplete(); } });
         }
         function preloadComplete() {
-            game.physics.startSystem(Phaser.Physics.ARCADE);
-            IO = _IO_CONTROLS.assignButtons(game);
-            gameTitle = game.add.sprite(game.world.centerX - 50, game.world.centerY, 'gametitle');
-            game.physics.enable([gameTitle], Phaser.Physics.ARCADE);
-            gameTitle.body.collideWorldBounds = true;
-            gameTitle.body.bounce.y = 0.5;
-            gameTitle.body.gravity.y = 200;
-            properties.state = gameStates.READY;
+            var game = phaserMaster.game();
+            phaserControls.assign({ game: game });
+            phaserSprites.assign({ game: game });
+            phaserTexts.assign({ game: game });
+            phaserSprites.addSprite({ x: game.world.centerX - 150, y: game.world.centerY, key: 'sprite1', groupKey: 'group1', reference: 'gameTitle' });
+            phaserSprites.addSprite({ x: game.world.centerX, y: game.world.centerY, key: 'sprite2', groupKey: 'group1', reference: 'gameTitle' });
+            phaserSprites.addSprite({ x: game.world.centerX + 150, y: game.world.centerY, key: 'sprite3', groupKey: 'group1', reference: 'gameTitle' });
+            phaserSprites.getSprite('sprite1').anchor.set(0.5);
+            phaserSprites.getSprite('sprite2').anchor.set(0.5);
+            phaserSprites.getSprite('sprite3').anchor.set(0.5);
+            phaserTexts.addText({ key: 'test1', groupKey: 'group1', font: 'gem', x: 10, y: 10, size: 16, default: 'I am the best in the whole world and the whole world should know it!' });
+            phaserTexts.addText({ key: 'test2', groupKey: 'group1', font: 'gem', x: 10, y: 50, size: 16, default: 'I am the second in the whole world and the whole world should know it!' });
+            phaserMaster.setState('READY');
         }
         function update() {
-            if (_IO_CONTROLS.isDebuggerEnabled()) {
-                _IO_CONTROLS.updateDebugger();
+            if (phaserControls.isDebuggerEnabled()) {
+                phaserControls.updateDebugger();
             }
-            if (properties.state === gameStates.PRELOAD && !__phaser.global.pause) {
+            if (phaserMaster.checkState('PRELOAD') && !__phaser.global.pause) {
             }
-            if (properties.state === gameStates.READY && !__phaser.global.pause) {
-                if (_IO_CONTROLS.read('A').active && checkButtonDelay()) {
-                    updateButtonDelay();
+            if (phaserMaster.checkState('READY') && !__phaser.global.pause) {
+                if (phaserControls.read('LEFT').active) {
+                    for (var _i = 0, _a = phaserSprites.getGroup('group1'); _i < _a.length; _i++) {
+                        var sprite = _a[_i];
+                        sprite.rotation -= .05;
+                    }
+                }
+                if (phaserControls.read('RIGHT').active) {
+                    for (var _b = 0, _c = phaserSprites.getGroup('group1'); _b < _c.length; _b++) {
+                        var sprite = _c[_b];
+                        sprite.rotation += .05;
+                    }
+                }
+                if (phaserControls.checkWithDelay({ isActive: true, key: 'R1', delay: 100 })) {
+                    phaserTexts.getText('test2').text = 'CHANGE ONE';
+                }
+                if (phaserControls.checkWithDelay({ isActive: true, key: 'R2', delay: 100 })) {
+                    for (var _d = 0, _e = phaserTexts.getGroup('group1'); _d < _e.length; _d++) {
+                        var text = _e[_d];
+                        text.text = 'All changed!';
+                    }
+                }
+                if (phaserControls.checkWithDelay({ isActive: true, key: 'A', delay: 100 })) {
+                    phaserSprites.getSprite('sprite1').tint = Math.random() * 0xffffff;
+                }
+                if (phaserControls.checkWithDelay({ isActive: true, key: 'B', delay: 100 })) {
+                    phaserSprites.getSprite('sprite2').tint = Math.random() * 0xffffff;
+                }
+                if (phaserControls.checkWithDelay({ isActive: true, key: 'X', delay: 250 })) {
+                    phaserSprites.getSprite('sprite3').tint = Math.random() * 0xffffff;
+                }
+                if (phaserControls.checkWithDelay({ isActive: true, key: 'Y', delay: 300 })) {
+                    for (var _f = 0, _g = phaserSprites.getGroup('group1'); _f < _g.length; _f++) {
+                        var sprite = _g[_f];
+                        sprite.tint = Math.random() * 0xffffff;
+                    }
                 }
             }
         }
-        function checkButtonDelay() {
-            return game.time.now > properties.input.delay;
-        }
-        function updateButtonDelay() {
-            properties.input.delay = properties.input.delayValue + game.time.now;
-        }
         parent.game = this;
-        this.game = game;
+        this.game = phaserMaster.game();
     };
     PhaserGameObject.prototype.destroy = function () {
         this.game.destroy();
@@ -75,8 +87,8 @@ var PhaserGameObject = (function () {
     return PhaserGameObject;
 }());
 var __phaser = new PhaserGameObject();
-var IO_CONTROLS = (function () {
-    function IO_CONTROLS() {
+var PHASER_CONTROLS = (function () {
+    function PHASER_CONTROLS() {
         this.IO = null;
         this.game = null;
         this.buttonSensitivity = { TAP: 1, SHORT: 50, LONG: 150, SUPERLONG: 300 };
@@ -109,6 +121,24 @@ var IO_CONTROLS = (function () {
             START: { name: 'ENTER', code: 'Enter' },
             BACK: { name: 'BACKSPACE', code: 'Backspace' },
         };
+        this.buttonMapId = {
+            UP: 1,
+            DOWN: 2,
+            LEFT: 3,
+            RIGHT: 4,
+            A: 5,
+            B: 6,
+            X: 7,
+            Y: 8,
+            L1: 9,
+            L2: 10,
+            R1: 11,
+            R2: 12,
+            L3: 13,
+            R3: 14,
+            START: 15,
+            BACK: 16,
+        };
         this.disabledButtons = {
             ALL: false,
             DIRECTIONAL: false,
@@ -120,14 +150,17 @@ var IO_CONTROLS = (function () {
             enabled: false,
             text: {}
         };
+        this.inputDelay = {
+            delay: Array.apply(null, Array(20)).map(function () { return 0; })
+        };
     }
-    IO_CONTROLS.prototype.assignButtons = function (game) {
+    PHASER_CONTROLS.prototype.assign = function (construct) {
         var _this = this;
-        this.game = game;
+        this.game = construct.game;
         var style = { font: "12px Courier New", fill: "#fff", align: "left" };
         this.buttonArray.forEach(function (btn, index) {
             _this.debugger.text[btn] = null;
-            _this.debugger.text[btn] = game.add.text(10, 10 + (index * 15), "", style);
+            _this.debugger.text[btn] = construct.game.add.text(10, 10 + (index * 15), "", style);
             _this.disabledButtons[btn] = false;
         });
         var IO = {
@@ -140,7 +173,7 @@ var IO_CONTROLS = (function () {
             state: {}
         };
         var _loop_1 = function (btn) {
-            IO.buttons[btn] = game.input.keyboard.addKey(Phaser.Keyboard[this_1.buttonMap[btn].name]);
+            IO.buttons[btn] = construct.game.input.keyboard.addKey(Phaser.Keyboard[this_1.buttonMap[btn].name]);
             IO.sensitivityPress[btn] = null;
             IO.sensitivityBuffer[btn] = 0;
             IO.state[btn] = function () {
@@ -195,7 +228,7 @@ var IO_CONTROLS = (function () {
             var btn = _c[_b];
             _loop_2(btn);
         }
-        game.input.keyboard.onUpCallback = function (e) {
+        construct.game.input.keyboard.onUpCallback = function (e) {
             for (var _i = 0, _a = _this.buttonArray; _i < _a.length; _i++) {
                 var btn = _a[_i];
                 if (e.code === _this.buttonMap[btn].code) {
@@ -212,27 +245,45 @@ var IO_CONTROLS = (function () {
         this.IO = IO;
         return IO;
     };
-    IO_CONTROLS.prototype.mapKeys = function (map) {
+    PHASER_CONTROLS.prototype.mapKeys = function (map) {
         var _this = this;
         this.properties.isReady = false;
         this.destroyAll();
         setTimeout(function () {
             _this.buttonMap = map;
             _this.properties.isReady = true;
-            _this.assignButtons(_this.game);
+            _this.assign(_this.game);
         }, 1);
     };
-    IO_CONTROLS.prototype.isReady = function () {
+    PHASER_CONTROLS.prototype.isReady = function () {
         return this.properties.isReady;
     };
-    IO_CONTROLS.prototype.isDebuggerEnabled = function () {
+    PHASER_CONTROLS.prototype.getInputDelay = function () {
+        return this.inputDelay;
+    };
+    PHASER_CONTROLS.prototype.testDelay = function (val) {
+        return this.game.time.now > this.inputDelay.delay[val];
+    };
+    PHASER_CONTROLS.prototype.checkWithDelay = function (params) {
+        if (this.read(params.key).active === params.isActive) {
+            if (this.game.time.now > this.inputDelay.delay[this.getKeyId(params.key)]) {
+                this.inputDelay.delay[this.getKeyId(params.key)] = params.delay + this.game.time.now;
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        return false;
+    };
+    PHASER_CONTROLS.prototype.isDebuggerEnabled = function () {
         return this.debugger.enabled;
     };
-    IO_CONTROLS.prototype.setDebugger = function (state) {
+    PHASER_CONTROLS.prototype.setDebugger = function (state) {
         if (state === void 0) { state = true; }
         this.debugger.enabled = state;
     };
-    IO_CONTROLS.prototype.updateDebugger = function () {
+    PHASER_CONTROLS.prototype.updateDebugger = function () {
         if (this.properties.isReady) {
             for (var _i = 0, _a = this.buttonArray; _i < _a.length; _i++) {
                 var btn = _a[_i];
@@ -240,43 +291,43 @@ var IO_CONTROLS = (function () {
             }
         }
     };
-    IO_CONTROLS.prototype.disableAllInput = function () {
+    PHASER_CONTROLS.prototype.disableAllInput = function () {
         this.disabledButtons.ALL = true;
     };
-    IO_CONTROLS.prototype.enableAllInput = function () {
+    PHASER_CONTROLS.prototype.enableAllInput = function () {
         this.disabledButtons.ALL = false;
     };
-    IO_CONTROLS.prototype.disableAllDirectionalButtons = function () {
+    PHASER_CONTROLS.prototype.disableAllDirectionalButtons = function () {
         this.disabledButtons.DIRECTIONAL = true;
     };
-    IO_CONTROLS.prototype.enableAllDirectionalButtons = function () {
+    PHASER_CONTROLS.prototype.enableAllDirectionalButtons = function () {
         this.disabledButtons.DIRECTIONAL = false;
     };
-    IO_CONTROLS.prototype.disableAllTriggerButtons = function () {
+    PHASER_CONTROLS.prototype.disableAllTriggerButtons = function () {
         this.disabledButtons.TRIGGER = true;
     };
-    IO_CONTROLS.prototype.enableAllTriggerButtons = function () {
+    PHASER_CONTROLS.prototype.enableAllTriggerButtons = function () {
         this.disabledButtons.TRIGGER = false;
     };
-    IO_CONTROLS.prototype.disableAllActionButtons = function () {
+    PHASER_CONTROLS.prototype.disableAllActionButtons = function () {
         this.disabledButtons.ACTION = true;
     };
-    IO_CONTROLS.prototype.enableAllActionButtons = function () {
+    PHASER_CONTROLS.prototype.enableAllActionButtons = function () {
         this.disabledButtons.ACTION = false;
     };
-    IO_CONTROLS.prototype.disableAllSystemButtons = function () {
+    PHASER_CONTROLS.prototype.disableAllSystemButtons = function () {
         this.disabledButtons.SYSTEM = true;
     };
-    IO_CONTROLS.prototype.enableAllSystemButtons = function () {
+    PHASER_CONTROLS.prototype.enableAllSystemButtons = function () {
         this.disabledButtons.SYSTEM = false;
     };
-    IO_CONTROLS.prototype.setDisableKeyProperty = function (name, value) {
+    PHASER_CONTROLS.prototype.setDisableKeyProperty = function (name, value) {
         if (value === void 0) { value = true; }
         if (this.properties.isReady) {
             this.disabledButtons[name.toUpperCase()] = value;
         }
     };
-    IO_CONTROLS.prototype.getKeyDisabledValue = function (name) {
+    PHASER_CONTROLS.prototype.getKeyDisabledValue = function (name) {
         if (this.properties.isReady) {
             return this.disabledButtons[name.toUpperCase()];
         }
@@ -284,7 +335,7 @@ var IO_CONTROLS = (function () {
             return null;
         }
     };
-    IO_CONTROLS.prototype.clearAllControlIntervals = function () {
+    PHASER_CONTROLS.prototype.clearAllControlIntervals = function () {
         if (this.properties.isReady) {
             for (var _i = 0, _a = this.buttonArray; _i < _a.length; _i++) {
                 var btn = _a[_i];
@@ -293,21 +344,24 @@ var IO_CONTROLS = (function () {
             }
         }
     };
-    IO_CONTROLS.prototype.read = function (key) {
+    PHASER_CONTROLS.prototype.getKeyId = function (key) {
+        return this.buttonMapId[key.toUpperCase()];
+    };
+    PHASER_CONTROLS.prototype.read = function (key) {
         if (this.properties.isReady) {
             var _return = {};
-            return _return[key] = { active: this.IO.state[key.toUpperCase()]().val > 0 ? true : false, duration: this.IO.state[key.toUpperCase()]().val, state: this.IO.state[key.toUpperCase()]().state, type: this.IO.state[key.toUpperCase()]().type, disabled: this.disabledButtons[key.toUpperCase()] };
+            return _return[key] = { id: this.buttonMapId[key.toUpperCase()], active: this.IO.state[key.toUpperCase()]().val > 0 ? true : false, duration: this.IO.state[key.toUpperCase()]().val, state: this.IO.state[key.toUpperCase()]().state, type: this.IO.state[key.toUpperCase()]().type, disabled: this.disabledButtons[key.toUpperCase()] };
         }
         return {};
     };
-    IO_CONTROLS.prototype.readMulti = function (keys, returnAs) {
+    PHASER_CONTROLS.prototype.readMulti = function (keys, returnAs) {
         if (returnAs === void 0) { returnAs = 'OBJECT'; }
         if (this.properties.isReady) {
             if (returnAs === 'OBJECT') {
                 var _return = {};
                 for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
                     var key = keys_1[_i];
-                    _return[key] = { active: this.IO.state[key.toUpperCase()]().val > 0 ? true : false, duration: this.IO.state[key.toUpperCase()]().val, state: this.IO.state[key.toUpperCase()]().state, type: this.IO.state[key.toUpperCase()]().type, disabled: this.disabledButtons[key.toUpperCase()] };
+                    _return[key] = { id: this.buttonMapId[key.toUpperCase()], active: this.IO.state[key.toUpperCase()]().val > 0 ? true : false, duration: this.IO.state[key.toUpperCase()]().val, state: this.IO.state[key.toUpperCase()]().state, type: this.IO.state[key.toUpperCase()]().type, disabled: this.disabledButtons[key.toUpperCase()] };
                 }
                 return _return;
             }
@@ -315,16 +369,16 @@ var IO_CONTROLS = (function () {
                 var _return = [];
                 for (var _a = 0, keys_2 = keys; _a < keys_2.length; _a++) {
                     var key = keys_2[_a];
-                    _return.push({ key: key, active: this.IO.state[key.toUpperCase()]().val > 0 ? true : false, duration: this.IO.state[key.toUpperCase()]().val, state: this.IO.state[key.toUpperCase()]().state, type: this.IO.state[key.toUpperCase()]().type, disabled: this.disabledButtons[key.toUpperCase()] });
+                    _return.push({ id: this.buttonMapId[key.toUpperCase()], key: key, active: this.IO.state[key.toUpperCase()]().val > 0 ? true : false, duration: this.IO.state[key.toUpperCase()]().val, state: this.IO.state[key.toUpperCase()]().state, type: this.IO.state[key.toUpperCase()]().type, disabled: this.disabledButtons[key.toUpperCase()] });
                 }
                 return _return;
             }
         }
     };
-    IO_CONTROLS.prototype.debuggerString = function (key) {
-        return key.toUpperCase() + " (" + this.buttonMap[key.toUpperCase()].name + "/" + this.buttonMap[key.toUpperCase()].code + ") | duration: " + this.IO.state[key.toUpperCase()]().val + " | state: " + this.IO.state[key.toUpperCase()]().state + " | type: " + this.IO.state[key.toUpperCase()]().type + " | disabled: " + this.disabledButtons[key.toUpperCase()];
+    PHASER_CONTROLS.prototype.debuggerString = function (key) {
+        return key.toUpperCase() + " (" + this.buttonMap[key.toUpperCase()].name + "/" + this.buttonMap[key.toUpperCase()].code + ") | id: " + this.buttonMapId[key.toUpperCase()] + " duration: " + this.IO.state[key.toUpperCase()]().val + " | state: " + this.IO.state[key.toUpperCase()]().state + " | type: " + this.IO.state[key.toUpperCase()]().type + " | disabled: " + this.disabledButtons[key.toUpperCase()];
     };
-    IO_CONTROLS.prototype.getBtnPressType = function (val) {
+    PHASER_CONTROLS.prototype.getBtnPressType = function (val) {
         var _this = this;
         var _type = 'NONE', _state = 0, state = 0;
         Object.keys(this.buttonSensitivity).forEach(function (key) {
@@ -336,19 +390,19 @@ var IO_CONTROLS = (function () {
         });
         return { val: val, type: _type, state: _state };
     };
-    IO_CONTROLS.prototype.destroyAll = function () {
+    PHASER_CONTROLS.prototype.destroyAll = function () {
         var _this = this;
         this.clearAllControlIntervals();
         Object.keys(this.debugger.text).forEach(function (key) {
             _this.debugger.text[key].destroy();
         });
     };
-    return IO_CONTROLS;
+    return PHASER_CONTROLS;
 }());
-var IO_AUDIO = (function () {
-    function IO_AUDIO() {
+var PHASER_AUDIO = (function () {
+    function PHASER_AUDIO() {
     }
-    return IO_AUDIO;
+    return PHASER_AUDIO;
 }());
 var PHASER_PRELOADER = (function () {
     function PHASER_PRELOADER(construct) {
@@ -379,4 +433,201 @@ var PHASER_PRELOADER = (function () {
         }, this);
     };
     return PHASER_PRELOADER;
+}());
+var PHASER_SPRITE_MANAGER = (function () {
+    function PHASER_SPRITE_MANAGER() {
+        this.game = null;
+        this.resources = {
+            spritesArray: [],
+            spritesObject: {}
+        };
+    }
+    PHASER_SPRITE_MANAGER.prototype.assign = function (construct) {
+        this.game = construct.game;
+    };
+    PHASER_SPRITE_MANAGER.prototype.addSprite = function (data) {
+        var duplicateCheck = this.resources.spritesArray.filter(function (sprite) {
+            return sprite.key === data.key;
+        });
+        if (duplicateCheck.length === 0) {
+            var newSprite = this.game.add.sprite(data.x, data.y, data.reference);
+            newSprite.key = data.key;
+            newSprite.groupKey = data.groupKey || null;
+            this.resources.spritesArray.push(newSprite);
+            this.resources.spritesObject[data.key] = newSprite;
+            return newSprite;
+        }
+        else {
+            console.log("Duplicate key name not allowed: " + data.key);
+        }
+    };
+    PHASER_SPRITE_MANAGER.prototype.destroySprite = function (key) {
+        var keys = [];
+        var deleteSpriteArray = this.resources.spritesArray.filter(function (sprite) {
+            return sprite.key === key;
+        });
+        for (var _i = 0, deleteSpriteArray_1 = deleteSpriteArray; _i < deleteSpriteArray_1.length; _i++) {
+            var sprite = deleteSpriteArray_1[_i];
+            keys.push(sprite.key);
+            sprite.destroy();
+        }
+        delete this.resources.spritesObject[key];
+        this.resources.spritesArray = this.resources.spritesArray.filter(function (sprite) {
+            return sprite.key !== key;
+        });
+        return keys;
+    };
+    PHASER_SPRITE_MANAGER.prototype.destroySpriteGroup = function (groupKey) {
+        var keys = [];
+        var deleteSpriteArray = this.resources.spritesArray.filter(function (sprite) {
+            return sprite.groupKey === groupKey;
+        });
+        for (var _i = 0, deleteSpriteArray_2 = deleteSpriteArray; _i < deleteSpriteArray_2.length; _i++) {
+            var sprite = deleteSpriteArray_2[_i];
+            keys.push(sprite.key);
+            sprite.destroy();
+        }
+        delete this.resources.spritesObject[groupKey];
+        this.resources.spritesArray = this.resources.spritesArray.filter(function (sprite) {
+            return sprite.groupKey !== groupKey;
+        });
+        return keys;
+    };
+    PHASER_SPRITE_MANAGER.prototype.getSprite = function (key) {
+        return this.resources.spritesObject[key];
+    };
+    PHASER_SPRITE_MANAGER.prototype.getGroup = function (groupKey) {
+        return this.resources.spritesArray.filter(function (sprite) {
+            return sprite.groupKey === groupKey;
+        });
+    };
+    PHASER_SPRITE_MANAGER.prototype.getAllSprites = function (type) {
+        if (type === void 0) { type = 'BOTH'; }
+        if (type === 'ARRAY') {
+            return this.resources.spritesArray;
+        }
+        if (type == 'OBJECT') {
+            return this.resources.spritesObject;
+        }
+        return { object: this.resources.spritesObject, array: this.resources.spritesArray };
+    };
+    return PHASER_SPRITE_MANAGER;
+}());
+var PHASER_MASTER = (function () {
+    function PHASER_MASTER(construct) {
+        this._game = construct.game;
+        this.resolution = construct.resolution;
+        this.states = {
+            BOOT: 'BOOT',
+            PRELOAD: 'PRELOAD',
+            READY: 'READY',
+        };
+        this.currentState = this.states[0];
+    }
+    PHASER_MASTER.prototype.changeState = function (state) {
+        if (state === void 0) { state = null; }
+        var _state = state.toUpperCase();
+        var create = false;
+        if (this.states[_state] === undefined) {
+            this.states[_state] = _state;
+            create = true;
+        }
+        this.currentState = _state;
+        return { created: create, state: this.currentState };
+    };
+    PHASER_MASTER.prototype.getStates = function () {
+        return this.states;
+    };
+    PHASER_MASTER.prototype.getResolution = function () {
+        return this.resolution;
+    };
+    PHASER_MASTER.prototype.setState = function (state) {
+        this.currentState = state.toUpperCase();
+    };
+    PHASER_MASTER.prototype.checkState = function (state) {
+        return this.currentState === state.toUpperCase() ? true : false;
+    };
+    PHASER_MASTER.prototype.game = function () {
+        return this._game;
+    };
+    return PHASER_MASTER;
+}());
+var PHASER_TEXT_MANAGER = (function () {
+    function PHASER_TEXT_MANAGER() {
+        this.game = null;
+        this.texts = {
+            textsArray: [],
+            textsObject: {}
+        };
+    }
+    PHASER_TEXT_MANAGER.prototype.assign = function (construct) {
+        this.game = construct.game;
+    };
+    PHASER_TEXT_MANAGER.prototype.addText = function (data) {
+        var duplicateCheck = this.texts.textsArray.filter(function (texts) {
+            return texts.key === data.key;
+        });
+        if (duplicateCheck.length === 0) {
+            var newText = this.game.add.bitmapText(data.x, data.y, data.font, data.default, data.size);
+            newText.key = data.key;
+            newText.groupKey = data.groupKey || null;
+            this.texts.textsArray.push(newText);
+            this.texts.textsObject[data.key] = newText;
+            return newText;
+        }
+        else {
+            console.log("Duplicate key name not allowed: " + data.key);
+        }
+    };
+    PHASER_TEXT_MANAGER.prototype.destroyText = function (key) {
+        var keys = [];
+        var deleteTextArray = this.texts.textsArray.filter(function (sprite) {
+            return sprite.key === key;
+        });
+        for (var _i = 0, deleteTextArray_1 = deleteTextArray; _i < deleteTextArray_1.length; _i++) {
+            var text = deleteTextArray_1[_i];
+            keys.push(text.key);
+            text.destroy();
+        }
+        delete this.texts.textsObject[key];
+        this.texts.textsArray = this.texts.textsArray.filter(function (text) {
+            return text.key !== key;
+        });
+        return keys;
+    };
+    PHASER_TEXT_MANAGER.prototype.destroySpriteGroup = function (groupKey) {
+        var keys = [];
+        var deleteTextsArray = this.texts.textsArray.filter(function (texts) {
+            return texts.groupKey === groupKey;
+        });
+        for (var _i = 0, deleteTextsArray_1 = deleteTextsArray; _i < deleteTextsArray_1.length; _i++) {
+            var text = deleteTextsArray_1[_i];
+            keys.push(text.key);
+            text.destroy();
+        }
+        delete this.texts.textsObject[groupKey];
+        this.texts.textsArray = this.texts.textsArray.filter(function (text) {
+            return text.groupKey !== groupKey;
+        });
+        return keys;
+    };
+    PHASER_TEXT_MANAGER.prototype.getText = function (key) {
+        return this.texts.textsObject[key];
+    };
+    PHASER_TEXT_MANAGER.prototype.getGroup = function (groupKey) {
+        return this.texts.textsArray.filter(function (text) {
+            return text.groupKey === groupKey;
+        });
+    };
+    PHASER_TEXT_MANAGER.prototype.getAllTexts = function (type) {
+        if (type === void 0) { type = 'BOTH'; }
+        if (type === 'ARRAY') {
+            return this.texts.textsArray;
+        }
+        if (type == 'OBJECT') {
+            return this.texts.textsObject;
+        }
+        return { object: this.texts.textsObject, array: this.texts.textsArray };
+    };
+    return PHASER_TEXT_MANAGER;
 }());
