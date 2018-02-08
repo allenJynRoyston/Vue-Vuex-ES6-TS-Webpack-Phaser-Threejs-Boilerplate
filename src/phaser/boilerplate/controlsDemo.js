@@ -6,13 +6,24 @@ var PhaserGameObject = (function () {
         };
     }
     PhaserGameObject.prototype.init = function (el, parent, options) {
-        var phaserMaster = new PHASER_MASTER({ game: new Phaser.Game(options.width, options.height, Phaser.WEBGL, el, { preload: preload, update: update }), resolution: { width: options.width, height: options.height } }), phaserControls = new PHASER_CONTROLS(), phaserMouse = new PHASER_MOUSE({ showDebugger: false }), phaserSprites = new PHASER_SPRITE_MANAGER(), phaserBmd = new PHASER_BITMAPDATA_MANAGER(), phaserTexts = new PHASER_TEXT_MANAGER(), phaserButtons = new PHASER_BUTTON_MANAGER();
+        var phaserMaster = new PHASER_MASTER({ game: new Phaser.Game(options.width, options.height, Phaser.WEBGL, el, { preload: preload, update: update }), resolution: { width: options.width, height: options.height } }), phaserControls = new PHASER_CONTROLS(), phaserMouse = new PHASER_MOUSE({ showDebugger: false }), phaserSprites = new PHASER_SPRITE_MANAGER(), phaserTexts = new PHASER_TEXT_MANAGER(), phaserButtons = new PHASER_BUTTON_MANAGER();
         var button;
         function preload() {
             var game = phaserMaster.game();
             game.load.enableParallel = true;
             game.stage.backgroundColor = '#2f2f2f';
+            game.load.image('gameTitle', 'src/assets/game/demo1/titles/100x100.jpg');
             game.load.image('ship', 'src/assets/game/demo1/images/ship.png');
+            game.load.image('orangeBtn', 'src/assets/game/demo1/images/orangeBtn.png');
+            game.load.audio('intro-music', ['src/assets/game/demo1/music/far-sight.ogg']);
+            game.load.audio('select', ['src/assets/game/demo1/sound/Pickup_Coin.ogg']);
+            game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+            window.WebFontConfig = {
+                active: function () { },
+                google: {
+                    families: ['Press Start 2P']
+                }
+            };
             game.load.bitmapFont('gem', 'src/assets/fonts/gem.png', 'src/assets/fonts/gem.xml');
             phaserMaster.setState('PRELOAD');
             new PHASER_PRELOADER({ game: game, delayInSeconds: 0, done: function () { preloadComplete(); } });
@@ -22,87 +33,222 @@ var PhaserGameObject = (function () {
             phaserControls.assign({ game: game });
             phaserMouse.assign({ game: game });
             phaserSprites.assign({ game: game });
-            phaserBmd.assign({ game: game });
             phaserTexts.assign({ game: game });
             phaserButtons.assign({ game: game });
-            phaserBmd.addGradient({ name: 'bgGradient', start: generateHexColor(), end: generateHexColor(), width: game.canvas.width / 2, height: game.canvas.height, render: true });
-            phaserSprites.addSprite({ x: 0, y: 0, name: "spriteBg1", reference: phaserBmd.get('bgGradient').cacheBitmapData });
-            phaserSprites.get('spriteBg1').width = game.canvas.width / 2;
-            phaserSprites.get('spriteBg1').height = game.canvas.height;
-            phaserSprites.get('spriteBg1').x = game.canvas.width / 2;
-            phaserBmd.addGradient({ name: 'blockBmp', group: 'blockBmpGroup', start: generateHexColor(), end: generateHexColor(), width: 10, height: 10, render: false });
-            for (var i = 0; i < 10; i++) {
-                phaserSprites.addSprite({ x: 200, y: 0, name: "blockSprites" + i, group: 'blockSpritesGroup', reference: phaserBmd.get('blockBmp').cacheBitmapData });
-            }
-            phaserSprites.getGroup('blockSpritesGroup').forEach(function (sprite, index) {
-                game.physics.arcade.enable(sprite);
-                sprite.body.collideWorldBounds = true;
-                sprite.body.bounce.set(1);
-                sprite.body.velocity.x = game.rnd.realInRange(-200, 200);
-                sprite.body.velocity.y = game.rnd.realInRange(-200, 200);
+            phaserSprites.addSprite({ x: game.world.centerX - 150, y: game.world.centerY + 50, name: 'sprite1', group: 'group1', reference: 'ship' });
+            phaserSprites.addSprite({ x: game.world.centerX, y: game.world.centerY + 50, name: 'sprite2', group: 'group1', reference: 'ship' });
+            phaserSprites.addSprite({ x: game.world.centerX + 150, y: game.world.centerY + 50, name: 'sprite3', group: 'group1', reference: 'ship' });
+            phaserSprites.getGroup('group1').forEach(function (sprite, index) {
+                sprite.anchor.set(0.5);
+                sprite.scale.setTo(1, 1);
+                sprite.alpha = 1;
             });
-            for (var i = 0; i < 5; i++) {
-                phaserBmd.addImage({ name: "bmd" + i, group: 'shipGroups', reference: 'ship', x: 50 + (i * 111), y: 250, render: true });
-            }
-            phaserTexts.add({ name: 'header', font: 'gem', x: 10, y: 10, size: 14, default: 'Bitmapdata Examples' });
-            phaserTexts.center({ name: 'header', x: game.world.centerX, y: 20 });
-            phaserTexts.add({ name: 'instructions', font: 'gem', x: 10, y: 10, size: 14, default: 'Press A to change the background gradient with BitmapDataCache property.\rPress S to shift the Bitmap object HSL.\rPress D to change the floating tiles gradient with BitmapDataCache.\rPress F to change the ships HSL.\rPress Enter to mainpulate pixel data directly' });
-            phaserTexts.get('instructions').maxWidth = game.canvas.width - 10;
-            phaserTexts.center({ name: 'instructions', x: game.world.centerX, y: 400 });
-            phaserMaster.changeState('READY');
-        }
-        function generateHexColor() {
-            return '#' + ((0.5 + 0.5 * Math.random()) * 0xFFFFFF << 0).toString(16);
+            var setToRotate = function () {
+                phaserMaster.setState('ROTATE');
+                phaserTexts.get('state').text = "Current state: " + phaserMaster.getCurrentState();
+                phaserTexts.get('instructions').maxWidth = game.canvas.width - 10;
+                phaserTexts.get('instructions').text = 'Rotate ships individually with A, S, D or use the directional arrows to move them all.  Pressing ENTER will reset them to their starting location.';
+                phaserTexts.get('instructions').y = game.canvas.height - (phaserTexts.get('instructions').height + 15);
+            };
+            var setToScale = function () {
+                phaserMaster.setState('SCALE');
+                phaserTexts.get('state').text = "Current state: " + phaserMaster.getCurrentState();
+                phaserTexts.get('instructions').maxWidth = game.canvas.width - 10;
+                phaserTexts.get('instructions').text = 'Scale ships individually with A, S, D or use the directional arrows to scale them all.  Pressing ENTER will reset them to their original size.';
+                phaserTexts.get('instructions').y = game.canvas.height - (phaserTexts.get('instructions').height + 15);
+            };
+            var setToMove = function () {
+                phaserMaster.setState('MOVE');
+                phaserTexts.get('state').text = "Current state: " + phaserMaster.getCurrentState();
+                phaserTexts.get('instructions').maxWidth = game.canvas.width - 10;
+                phaserTexts.get('instructions').text = 'Move each ship individually by holding A, S, D and a directional arrow or move all of them by using just the directional arrows.';
+                phaserTexts.get('instructions').y = game.canvas.height - (phaserTexts.get('instructions').height + 15);
+            };
+            phaserButtons.add({ name: 'btn1', group: 'group1', x: game.world.centerX - 175, y: 100, reference: 'orangeBtn', onclick: function () { setToRotate(); } });
+            phaserButtons.add({ name: 'btn2', group: 'group1', x: game.world.centerX, y: 100, reference: 'orangeBtn', onclick: function () { setToScale(); } });
+            phaserButtons.add({ name: 'btn3', group: 'group1', x: game.world.centerX + 175, y: 100, reference: 'orangeBtn', onclick: function () { setToMove(); } });
+            phaserButtons.getGroup('group1').forEach(function (btn, index) {
+                btn.anchor.set(0.5);
+                btn.scale.setTo(.5, .5);
+            });
+            phaserTexts.add({ name: 'label1', group: 'instructions', font: 'gem', x: game.world.centerX - 225, y: 85, size: 32, default: 'ROTATE' });
+            phaserTexts.add({ name: 'label2', group: 'instructions', font: 'gem', x: game.world.centerX - 40, y: 85, size: 32, default: 'SCALE' });
+            phaserTexts.add({ name: 'label3', group: 'instructions', font: 'gem', x: game.world.centerX + 145, y: 85, size: 32, default: 'MOVE' });
+            phaserTexts.add({ name: 'status', group: 'instructions', font: 'gem', x: 10, y: 10, size: 16, default: 'Click on a button to change the action:' });
+            phaserTexts.add({ name: 'state', group: 'instructions', font: 'gem', x: 10, y: 30, size: 16, default: '' });
+            phaserTexts.add({ name: 'instructions', group: 'instructions', font: 'gem', x: 10, y: game.canvas.height - 80, size: 16, default: '' });
+            setToMove();
         }
         function update() {
             if (phaserControls.isDebuggerEnabled()) {
                 phaserControls.updateDebugger();
             }
             phaserMouse.updateDebugger();
-            phaserSprites.getGroup('group1').forEach(function (sprite, index) {
-                sprite.angle += 5;
-            });
-            if (phaserControls.checkWithDelay({ isActive: true, key: 'A', delay: 500 })) {
-                phaserBmd.get('bgGradient').shiftHSL(0.3);
+            if (phaserMaster.checkState('PRELOAD') && !__phaser.global.pause) {
             }
-            if (phaserControls.checkWithDelay({ isActive: true, key: 'B', delay: 500 })) {
-                var cbd = phaserBmd.get('bgGradient').cacheBitmapData;
-                var grd = cbd.context.createLinearGradient(0, 0, 0, cbd.height);
-                grd.addColorStop(0, generateHexColor());
-                grd.addColorStop(1, generateHexColor());
-                cbd.context.fillStyle = grd;
-                cbd.context.fillRect(0, 0, cbd.width, cbd.height);
-                cbd.dirty = true;
+            if (phaserMaster.checkState('ROTATE') && !__phaser.global.pause) {
+                rotateLoop();
             }
-            if (phaserControls.checkWithDelay({ isActive: true, key: 'X', delay: 100 })) {
-                var cbd = phaserBmd.get('blockBmp').cacheBitmapData;
-                var grd = cbd.context.createLinearGradient(0, 0, 0, cbd.height);
-                grd.addColorStop(0, generateHexColor());
-                grd.addColorStop(1, generateHexColor());
-                cbd.context.fillStyle = grd;
-                cbd.context.fillRect(0, 0, cbd.width, cbd.height);
-                cbd.dirty = true;
+            if (phaserMaster.checkState('SCALE') && !__phaser.global.pause) {
+                scaleLoop();
             }
-            if (phaserControls.checkWithDelay({ isActive: true, key: 'Y', delay: 10 })) {
-                phaserBmd.getGroup('shipGroups').forEach(function (item, index) {
-                    item.shiftHSL(0.05 + (index * .05));
-                });
+            if (phaserMaster.checkState('MOVE') && !__phaser.global.pause) {
+                moveLoop();
+            }
+        }
+        function rotateLoop() {
+            if (phaserControls.read('A').active) {
+                phaserSprites.get('sprite1').angle += 5;
+            }
+            if (phaserControls.read('B').active) {
+                phaserSprites.get('sprite2').angle += 5;
+            }
+            if (phaserControls.read('X').active) {
+                phaserSprites.get('sprite3').angle += 5;
+            }
+            if (phaserControls.read('LEFT').active) {
+                for (var _i = 0, _a = phaserSprites.getGroup('group1'); _i < _a.length; _i++) {
+                    var sprite = _a[_i];
+                    sprite.angle -= 5;
+                }
+            }
+            if (phaserControls.read('RIGHT').active) {
+                for (var _b = 0, _c = phaserSprites.getGroup('group1'); _b < _c.length; _b++) {
+                    var sprite = _c[_b];
+                    sprite.angle += 5;
+                }
+            }
+            if (phaserControls.read('UP').active) {
+                for (var _d = 0, _e = phaserSprites.getGroup('group1'); _d < _e.length; _d++) {
+                    var sprite = _e[_d];
+                    sprite.angle -= 10;
+                }
+            }
+            if (phaserControls.read('DOWN').active) {
+                for (var _f = 0, _g = phaserSprites.getGroup('group1'); _f < _g.length; _f++) {
+                    var sprite = _g[_f];
+                    sprite.angle += 10;
+                }
             }
             if (phaserControls.checkWithDelay({ isActive: true, key: 'START', delay: 500 })) {
-                phaserBmd.getGroup('shipGroups').forEach(function (item, index) {
-                    item.processPixelRGB(function (pixel) {
-                        pixel.r = 255 - pixel.r;
-                        pixel.g = 255 - pixel.g;
-                        pixel.b = 255 - pixel.b;
-                        return pixel;
-                    });
-                });
-                phaserBmd.get('bgGradient').processPixelRGB(function (pixel) {
-                    pixel.r = 255 - pixel.r;
-                    pixel.g = 255 - pixel.g;
-                    pixel.b = 255 - pixel.b;
-                    return pixel;
-                });
+                var game = phaserMaster.game();
+                for (var _h = 0, _j = phaserSprites.getGroup('group1'); _h < _j.length; _h++) {
+                    var sprite = _j[_h];
+                    game.add.tween(sprite).to({ angle: 0 }, 500, Phaser.Easing.Bounce.Out, true);
+                    game.add.tween(sprite.scale).to({ y: 1, x: 1 }, 500, Phaser.Easing.Bounce.Out, true);
+                    game.add.tween(sprite).to({ y: sprite.getDefaultPositions().y, x: sprite.getDefaultPositions().x }, 500, Phaser.Easing.Bounce.Out, true);
+                }
+            }
+        }
+        function scaleLoop() {
+            if (phaserControls.read('A').active) {
+                phaserSprites.get('sprite1').scale.setTo(phaserSprites.get('sprite1').scale.x += .025, phaserSprites.get('sprite1').scale.y += .025);
+            }
+            if (phaserControls.read('B').active) {
+                phaserSprites.get('sprite2').scale.setTo(phaserSprites.get('sprite2').scale.x += .025, phaserSprites.get('sprite2').scale.y += .025);
+            }
+            if (phaserControls.read('X').active) {
+                phaserSprites.get('sprite3').scale.setTo(phaserSprites.get('sprite3').scale.x += .025, phaserSprites.get('sprite3').scale.y += .025);
+            }
+            if (phaserControls.read('UP').active) {
+                for (var _i = 0, _a = phaserSprites.getGroup('group1'); _i < _a.length; _i++) {
+                    var sprite = _a[_i];
+                    sprite.scale.setTo(sprite.scale.x += .05, sprite.scale.y += .05);
+                }
+            }
+            if (phaserControls.read('DOWN').active) {
+                for (var _b = 0, _c = phaserSprites.getGroup('group1'); _b < _c.length; _b++) {
+                    var sprite = _c[_b];
+                    sprite.scale.setTo(sprite.scale.x -= .05, sprite.scale.y -= .05);
+                }
+            }
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'START', delay: 500 })) {
+                var game = phaserMaster.game();
+                for (var _d = 0, _e = phaserSprites.getGroup('group1'); _d < _e.length; _d++) {
+                    var sprite = _e[_d];
+                    game.add.tween(sprite).to({ angle: 0 }, 500, Phaser.Easing.Bounce.Out, true);
+                    game.add.tween(sprite.scale).to({ y: 1, x: 1 }, 500, Phaser.Easing.Bounce.Out, true);
+                    game.add.tween(sprite).to({ y: sprite.getDefaultPositions().y, x: sprite.getDefaultPositions().x }, 500, Phaser.Easing.Bounce.Out, true);
+                }
+            }
+        }
+        function moveLoop() {
+            if (phaserControls.read('A').active) {
+                if (phaserControls.read('UP').active) {
+                    phaserSprites.get('sprite1').y -= 5;
+                }
+                if (phaserControls.read('DOWN').active) {
+                    phaserSprites.get('sprite1').y += 5;
+                }
+                if (phaserControls.read('LEFT').active) {
+                    phaserSprites.get('sprite1').x -= 5;
+                }
+                if (phaserControls.read('RIGHT').active) {
+                    phaserSprites.get('sprite1').x += 5;
+                }
+            }
+            if (phaserControls.read('B').active) {
+                if (phaserControls.read('UP').active) {
+                    phaserSprites.get('sprite2').y -= 5;
+                }
+                if (phaserControls.read('DOWN').active) {
+                    phaserSprites.get('sprite2').y += 5;
+                }
+                if (phaserControls.read('LEFT').active) {
+                    phaserSprites.get('sprite2').x -= 5;
+                }
+                if (phaserControls.read('RIGHT').active) {
+                    phaserSprites.get('sprite2').x += 5;
+                }
+            }
+            if (phaserControls.read('X').active) {
+                if (phaserControls.read('UP').active) {
+                    phaserSprites.get('sprite3').y -= 5;
+                }
+                if (phaserControls.read('DOWN').active) {
+                    phaserSprites.get('sprite3').y += 5;
+                }
+                if (phaserControls.read('LEFT').active) {
+                    phaserSprites.get('sprite3').x -= 5;
+                }
+                if (phaserControls.read('RIGHT').active) {
+                    phaserSprites.get('sprite3').x += 5;
+                }
+            }
+            if (!phaserControls.read('A').active && !phaserControls.read('B').active && !phaserControls.read('X').active) {
+                if (phaserControls.read('UP').active) {
+                    for (var _i = 0, _a = phaserSprites.getGroup('group1'); _i < _a.length; _i++) {
+                        var sprite = _a[_i];
+                        sprite.y -= 5;
+                    }
+                }
+                if (phaserControls.read('DOWN').active) {
+                    for (var _b = 0, _c = phaserSprites.getGroup('group1'); _b < _c.length; _b++) {
+                        var sprite = _c[_b];
+                        sprite.y += 5;
+                    }
+                }
+                if (phaserControls.read('LEFT').active) {
+                    for (var _d = 0, _e = phaserSprites.getGroup('group1'); _d < _e.length; _d++) {
+                        var sprite = _e[_d];
+                        sprite.x -= 5;
+                    }
+                }
+                if (phaserControls.read('RIGHT').active) {
+                    for (var _f = 0, _g = phaserSprites.getGroup('group1'); _f < _g.length; _f++) {
+                        var sprite = _g[_f];
+                        sprite.x += 5;
+                    }
+                }
+            }
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'START', delay: 500 })) {
+                var game = phaserMaster.game();
+                for (var _h = 0, _j = phaserSprites.getGroup('group1'); _h < _j.length; _h++) {
+                    var sprite = _j[_h];
+                    game.add.tween(sprite).to({ angle: 0 }, 500, Phaser.Easing.Bounce.Out, true);
+                    game.add.tween(sprite.scale).to({ y: 1, x: 1 }, 500, Phaser.Easing.Bounce.Out, true);
+                    game.add.tween(sprite).to({ y: sprite.getDefaultPositions().y, x: sprite.getDefaultPositions().x }, 500, Phaser.Easing.Bounce.Out, true);
+                }
             }
         }
         parent.game = this;
@@ -126,61 +272,28 @@ var PHASER_BITMAPDATA_MANAGER = (function () {
             array: [],
             object: {}
         };
-        this.bmd = {
-            array: [],
-            object: {}
-        };
     }
     PHASER_BITMAPDATA_MANAGER.prototype.assign = function (construct) {
         this.game = construct.game;
     };
-    PHASER_BITMAPDATA_MANAGER.prototype.addGradient = function (construct) {
-        var duplicateCheck = this.bmd.array.filter(function (obj) {
-            return obj.key === construct.key;
-        });
-        if (duplicateCheck.length === 0) {
-            var tempBmd = this.game.make.bitmapData(construct.width, construct.height);
-            var grd = tempBmd.context.createLinearGradient(0, 0, 0, construct.height);
-            grd.addColorStop(0, construct.start);
-            grd.addColorStop(1, construct.end);
-            tempBmd.context.fillStyle = grd;
-            tempBmd.context.fillRect(0, 0, construct.width, construct.height);
-            var cacheRef = this.game.cache.addBitmapData(construct.name, tempBmd);
-            var newBmd = this.game.make.bitmapData();
-            newBmd.load(this.game.cache.getBitmapData(construct.name));
-            if (construct.render) {
-                newBmd.addToWorld(construct.x, construct.y);
-            }
-            newBmd.name = construct.name;
-            newBmd.group = construct.group;
-            newBmd.cacheBitmapData = cacheRef;
-            this.bmd.array.push(newBmd);
-            this.bmd.object[construct.name] = newBmd;
-            return newBmd;
-        }
-        else {
-            console.log("Duplicate key name not allowed: " + construct.name);
-        }
+    PHASER_BITMAPDATA_MANAGER.prototype.add = function () {
     };
-    PHASER_BITMAPDATA_MANAGER.prototype.addImage = function (construct) {
+    PHASER_BITMAPDATA_MANAGER.prototype.addImage = function (data) {
         var duplicateCheck = this.bmd.array.filter(function (obj) {
-            return obj.key === construct.key;
+            return obj.key === data.key;
         });
         if (duplicateCheck.length === 0) {
             var newBmd = this.game.make.bitmapData();
-            newBmd.load(construct.reference);
-            if (construct.render) {
-                newBmd.addToWorld(construct.x, construct.y);
-            }
-            newBmd.name = construct.name;
-            newBmd.group = construct.group;
-            newBmd.cacheBitmapData = construct.reference;
+            newBmd.load(data.reference);
+            newBmd.addToWorld(data.x, data.y);
+            newBmd.name = data.name;
+            newBmd.group = data.group;
             this.bmd.array.push(newBmd);
-            this.bmd.object[construct.name] = newBmd;
+            this.bmd.object[data.name] = newBmd;
             return newBmd;
         }
         else {
-            console.log("Duplicate key name not allowed: " + construct.name);
+            console.log("Duplicate key name not allowed: " + data.key);
         }
     };
     PHASER_BITMAPDATA_MANAGER.prototype.destroy = function (key) {
@@ -256,20 +369,20 @@ var PHASER_BUTTON_MANAGER = (function () {
     PHASER_BUTTON_MANAGER.prototype.assign = function (construct) {
         this.game = construct.game;
     };
-    PHASER_BUTTON_MANAGER.prototype.add = function (construct) {
+    PHASER_BUTTON_MANAGER.prototype.add = function (data) {
         var duplicateCheck = this.resources.array.filter(function (sprite) {
-            return sprite.name === construct.name;
+            return sprite.name === data.name;
         });
         if (duplicateCheck.length === 0) {
-            var newSprite = this.game.add.button(construct.x, construct.y, construct.reference, construct.onclick);
-            newSprite.name = construct.name;
-            newSprite.group = construct.group || null;
+            var newSprite = this.game.add.button(data.x, data.y, data.reference, data.onclick);
+            newSprite.name = data.name;
+            newSprite.group = data.group || null;
             this.resources.array.push(newSprite);
-            this.resources.object[construct.name] = newSprite;
+            this.resources.object[data.name] = newSprite;
             return newSprite;
         }
         else {
-            console.log("Duplicate key name not allowed: " + construct.name);
+            console.log("Duplicate key name not allowed: " + data.key);
         }
     };
     PHASER_BUTTON_MANAGER.prototype.destroy = function (key) {
@@ -848,23 +961,23 @@ var PHASER_SPRITE_MANAGER = (function () {
     PHASER_SPRITE_MANAGER.prototype.assign = function (construct) {
         this.game = construct.game;
     };
-    PHASER_SPRITE_MANAGER.prototype.addSprite = function (construct) {
+    PHASER_SPRITE_MANAGER.prototype.addSprite = function (data) {
         var duplicateCheck = this.sprites.array.filter(function (obj) {
-            return obj.name === construct.name;
+            return obj.name === data.name;
         });
         if (duplicateCheck.length === 0) {
-            var newSprite = this.game.add.sprite(construct.x, construct.y, construct.reference);
-            newSprite.name = construct.name;
-            newSprite.group = construct.group || null;
-            newSprite.defaultPosition = { x: construct.x, y: construct.y };
+            var newSprite = this.game.add.sprite(data.x, data.y, data.reference);
+            newSprite.name = data.name;
+            newSprite.group = data.group || null;
+            newSprite.defaultPosition = { x: data.x, y: data.y };
             newSprite.setDefaultPositions = function (x, y) { this.defaultPosition.x = x, this.defaultPosition.y = y; };
             newSprite.getDefaultPositions = function () { return this.defaultPosition; };
             this.sprites.array.push(newSprite);
-            this.sprites.object[construct.name] = newSprite;
+            this.sprites.object[data.name] = newSprite;
             return newSprite;
         }
         else {
-            console.log("Duplicate key name not allowed: " + construct.name);
+            console.log("Duplicate key name not allowed: " + data.key);
         }
     };
     PHASER_SPRITE_MANAGER.prototype.destroy = function (key) {
@@ -903,8 +1016,8 @@ var PHASER_SPRITE_MANAGER = (function () {
         return this.sprites.object[key];
     };
     PHASER_SPRITE_MANAGER.prototype.getGroup = function (key) {
-        return this.sprites.array.filter(function (obj) {
-            return obj.group === key;
+        return this.sprites.array.filter(function (sprite) {
+            return sprite.group === key;
         });
     };
     PHASER_SPRITE_MANAGER.prototype.getAll = function (type) {
@@ -940,20 +1053,20 @@ var PHASER_TEXT_MANAGER = (function () {
     PHASER_TEXT_MANAGER.prototype.assign = function (construct) {
         this.game = construct.game;
     };
-    PHASER_TEXT_MANAGER.prototype.add = function (construct) {
+    PHASER_TEXT_MANAGER.prototype.add = function (data) {
         var duplicateCheck = this.texts.array.filter(function (obj) {
-            return obj.name === construct.name;
+            return obj.name === data.name;
         });
         if (duplicateCheck.length === 0) {
-            var newText = this.game.add.bitmapText(construct.x, construct.y, construct.font, construct.default, construct.size);
-            newText.name = construct.name;
-            newText.group = construct.group || null;
+            var newText = this.game.add.bitmapText(data.x, data.y, data.font, data.default, data.size);
+            newText.name = data.name;
+            newText.group = data.group || null;
             this.texts.array.push(newText);
-            this.texts.object[construct.name] = newText;
+            this.texts.object[data.name] = newText;
             return newText;
         }
         else {
-            console.log("Duplicate key name not allowed: " + construct.name);
+            console.log("Duplicate key name not allowed: " + data.key);
         }
     };
     PHASER_TEXT_MANAGER.prototype.destroy = function (key) {
