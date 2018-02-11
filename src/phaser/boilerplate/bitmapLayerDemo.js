@@ -11,7 +11,7 @@ var PhaserGameObject = (function () {
             var game = phaserMaster.game();
             game.load.enableParallel = true;
             game.stage.backgroundColor = '#2f2f2f';
-            game.load.image('demoImage', 'src/assets/game/demo1/images/starfield.png');
+            game.load.image('ship', 'src/assets/game/demo1/images/ship.png');
             game.load.bitmapFont('gem', 'src/assets/fonts/gem.png', 'src/assets/fonts/gem.xml');
             phaserMaster.setState('PRELOAD');
             new PHASER_PRELOADER({ game: game, delayInSeconds: 0, done: function () { preloadComplete(); } });
@@ -28,26 +28,43 @@ var PhaserGameObject = (function () {
         }
         function preloadComplete() {
             var game = phaserMaster.game();
-            phaserBmd.addImage({ name: "bmdDemoImg", group: 'bmd1', reference: 'demoImage', x: 65, y: 0, render: false });
-            phaserMaster.let('shape', new Phaser.Rectangle(0, phaserBmd.get('bmdDemoImg').height, phaserBmd.get('bmdDemoImg').width, 1));
-            phaserMaster.let('dropTime', game.time.now + 250);
-            phaserMaster.let('beginFill', false);
+            phaserBmd.addGradient({ name: 'bgGradient2', start: generateHexColor(), end: generateHexColor(), width: game.canvas.width / 2, height: game.canvas.height, y: 0, render: true });
+            var gradientSprite = phaserSprites.add({ x: 0, y: 0, name: "spriteBgBlock", reference: phaserBmd.get('bgGradient2').cacheBitmapData });
+            gradientSprite.width = game.canvas.width;
+            gradientSprite.height = game.canvas.height;
+            phaserGroup.layer(0).add(gradientSprite);
+            phaserBmd.addGradient({ name: 'blockBmp', group: 'blockBmpGroup', start: generateHexColor(), end: generateHexColor(), width: 10, height: 10, render: false });
+            for (var i = 0; i < 20; i++) {
+                var newBlock = phaserSprites.add({ x: 200, y: 0, name: "blockSprites" + i, group: 'blockSpritesGroup', reference: phaserBmd.get('blockBmp').cacheBitmapData });
+                game.physics.arcade.enable(newBlock);
+                newBlock.body.collideWorldBounds = true;
+                newBlock.body.bounce.set(1);
+                newBlock.body.velocity.x = game.rnd.realInRange(-200, 200);
+                newBlock.body.velocity.y = game.rnd.realInRange(-200, 200);
+                phaserGroup.layer(1).add(newBlock);
+            }
+            for (var i = 0; i < 5; i++) {
+                var ship = phaserBmd.addImage({ name: "bmd" + i, group: 'shipGroups', reference: 'ship', x: 50 + (i * 111), y: 250, render: true });
+            }
             var padding = 15;
-            var header1 = phaserTexts.add({ name: 'header', font: 'gem', size: 18, default: 'Control Manager Debugger' });
-            phaserTexts.alignToTopCenter('header', 10);
+            var header1 = phaserTexts.add({ name: 'header', font: 'gem', size: 18, default: 'Bitmap Layer Demo' });
+            header1.maxWidth = 200 - padding;
+            phaserTexts.alignToTopRightCorner('header', 10);
             phaserGroup.layer(10).add(header1);
-            var instructions = phaserTexts.add({ name: 'instructions', size: 14, font: 'gem', default: "Press [ENTER] to begin fill."
+            var instructions = phaserTexts.add({ name: 'instructions', size: 14, font: 'gem', default: "[A] to shift bitmap.\n[S] bitmap sprite.\n[D] block sprites.\n[F] ships.\n[ENTER] inverse sprites.\n"
             });
-            phaserTexts.get('instructions').maxWidth = game.canvas.width - padding;
-            phaserTexts.center('instructions', 0, 100);
+            phaserTexts.get('instructions').maxWidth = 200 - padding;
+            phaserTexts.alignToBottomRightCorner('instructions', 10);
             phaserGroup.layer(10).add(instructions);
             phaserBmd.addGradient({ name: 'bgGradient', start: '#0000FF', end: '#00008b', width: padding, height: padding, render: false });
-            var instructionbox = phaserSprites.add({ x: instructions.x - padding, y: instructions.y - padding, name: "spriteBg1", reference: phaserBmd.get('bgGradient').cacheBitmapData });
+            var instructionbox = phaserSprites.add({ x: 0, y: game.canvas.height - instructions.height - padding, name: "spriteBg1", reference: phaserBmd.get('bgGradient').cacheBitmapData });
             instructionbox.width = instructions.width + padding * 2;
             instructionbox.height = instructions.height + padding * 2;
+            instructionbox.x = instructions.x - padding;
             var headerbox = phaserSprites.add({ x: 0, y: 0, name: "spriteBg2", reference: phaserBmd.get('bgGradient').cacheBitmapData });
-            headerbox.width = game.canvas.width;
+            headerbox.width = header1.width + padding * 2;
             headerbox.height = header1.height + padding * 2;
+            headerbox.x = header1.x - padding;
             phaserGroup.layer(9).add(instructionbox);
             phaserGroup.layer(9).add(headerbox);
             phaserMaster.changeState('READY');
@@ -60,23 +77,50 @@ var PhaserGameObject = (function () {
                 phaserControls.updateDebugger();
             }
             phaserMouse.updateDebugger();
-            var beginFill = phaserMaster.get('beginFill');
-            if (beginFill) {
-                var shape = phaserMaster.get('shape'), dropTime = phaserMaster.get('dropTime');
-                if (shape.y > 0 && phaserMaster.game().time.now > dropTime) {
-                    for (var y = 0; y < shape.y; y++) {
-                        phaserBmd.get('bmdDemoImg').copyRect('demoImage', shape, 0, y);
-                    }
-                    shape.y--;
-                    dropTime = phaserMaster.game().time.now + 10;
-                }
+            phaserSprites.getGroup('group1').forEach(function (sprite, index) {
+                sprite.angle += 5;
+            });
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'A', delay: 500 })) {
+                phaserBmd.get('bgGradient2').shiftHSL(0.3);
             }
-            if (phaserControls.read('START').active) {
-                phaserMaster.forceLet('beginFill', true);
-                phaserSprites.get('spriteBg1').visible = !phaserSprites.get('spriteBg1').visible;
-                phaserSprites.get('spriteBg2').visible = !phaserSprites.get('spriteBg2').visible;
-                phaserTexts.get('header').visible = false;
-                phaserTexts.get('instructions').visible = false;
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'B', delay: 500 })) {
+                var cbd = phaserBmd.get('bgGradient2').cacheBitmapData;
+                var grd = cbd.context.createLinearGradient(0, 0, 0, cbd.height);
+                grd.addColorStop(0, generateHexColor());
+                grd.addColorStop(1, generateHexColor());
+                cbd.context.fillStyle = grd;
+                cbd.context.fillRect(0, 0, cbd.width, cbd.height);
+                cbd.dirty = true;
+            }
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'X', delay: 100 })) {
+                var cbd = phaserBmd.get('blockBmp').cacheBitmapData;
+                var grd = cbd.context.createLinearGradient(0, 0, 0, cbd.height);
+                grd.addColorStop(0, generateHexColor());
+                grd.addColorStop(1, generateHexColor());
+                cbd.context.fillStyle = grd;
+                cbd.context.fillRect(0, 0, cbd.width, cbd.height);
+                cbd.dirty = true;
+            }
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'Y', delay: 10 })) {
+                phaserBmd.getGroup('shipGroups').forEach(function (item, index) {
+                    item.shiftHSL(0.05 + (index * .05));
+                });
+            }
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'START', delay: 500 })) {
+                phaserBmd.getGroup('shipGroups').forEach(function (item, index) {
+                    item.processPixelRGB(function (pixel) {
+                        pixel.r = 255 - pixel.r;
+                        pixel.g = 255 - pixel.g;
+                        pixel.b = 255 - pixel.b;
+                        return pixel;
+                    });
+                });
+                phaserBmd.get('bgGradient').processPixelRGB(function (pixel) {
+                    pixel.r = 255 - pixel.r;
+                    pixel.g = 255 - pixel.g;
+                    pixel.b = 255 - pixel.b;
+                    return pixel;
+                });
             }
         }
         parent.game = this;

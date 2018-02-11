@@ -1,59 +1,45 @@
 <template lang="pug">
-  .container
-    .section
-      .box
-          article.media
-              .media-left
-                figure.image.is-64x64
-                  img(src='https://bulma.io/images/placeholders/128x128.png', alt='Image')
-              |
-              .media-content
-                .content
-                  p
-                    strong John Smith
-                    |
-                    small @johnsmith
-                    |
-                    small 31m
-                    |
-                    br
-                    |           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur sit amet massa fringilla egestas. Nullam condimentum luctus turpis.
-                |
-                nav.level.is-mobile
-                  .level-left
-                    a.level-item
-                      span.icon.is-small
-                        i.fa.fa-reply
-                    |
-                    a.level-item
-                      span.icon.is-small
-                        i.fa.fa-retweet
-                    |
-                    a.level-item
-                      span.icon.is-small
-                        i.fa.fa-heart
+  .section
+    .container
+      .columns
+        .column.is-2
+          ul
+            li(v-for="item in items")
+              a(@click='active = item.id') {{ item.title }}
+        .column
+          phaser-master(v-if='active === 0')
+          phaser-sprite(v-if='active === 1')
+          phaser-text(v-if='active === 2')
+          phaser-mouse(v-if='active === 3')
+          phaser-bitmap(v-if='active === 4')
+          phaser-controls(v-if='active === 5')
+          phaser-group(v-if='active === 6')
 </template>
 
 <script>
-import shortParagraph1 from "../assets/images/site/short-paragraph.png"
-
 export default {
-  name: 'home',
+  name: 'about',
   data () {
     return {
-      test: 'hello world',
       store: this.$store,
-      shortParagraph1: shortParagraph1
+      items: [
+        {title: 'MASTER MANAGER', id: 0},
+        {title: 'SPRITE MANAGER', id: 1},
+        {title: 'TEXT MANAGER', id: 2},
+        {title: 'MOUSE MANAGER', id: 3},
+        {title: 'BITMAPDATA MANAGER', id: 4},
+        {title: 'CONTROL MANAGER', id: 5},
+        {title: 'GROUP MANAGER', id: 6},
+      ],
+      active: null
     }
   },
-  methods: {
-
+  mounted:function(){
+    this.active = this.items[0].id
   }
 }
 </script>
 
 <style lang="sass" scoped>
-  .demo-panel
-    padding: 20px
-    overflow: hidden
+
 </style>

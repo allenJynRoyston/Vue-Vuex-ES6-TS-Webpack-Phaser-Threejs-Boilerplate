@@ -1,4 +1,8 @@
 <template lang="pug">
+  div
+    a(v-for='demo in demos' @click='loadFile(demo.file)') {{demo.title}} &nbsp;&nbsp;&nbsp;&nbsp;
+    br
+    br
     #phaser-example
 </template>
 
@@ -11,6 +15,12 @@ export default {
   data () {
     return {
       game: null,
+      demos: [
+        {title: 'Sprite Class Manager', file: 'boilerplate/spriteManagerDemo.min.js'},
+        {title: 'Controller Class Manager', file: 'boilerplate/controllerManagerDemo.min.js'},
+        {title: 'Bitmapdata Layer Demo', file: 'boilerplate/bitmapLayerDemo.min.js'},
+        {title: 'Bitmapdata Fill Demo', file: 'boilerplate/bitmapFillDemo.min.js'},
+      ]
     }
   },
   mounted(){
@@ -18,7 +28,7 @@ export default {
   },
   methods: {
     init(){
-      this.loadGame('boilerplate/gameTemplate.js')
+      this.loadGame('boilerplate/spriteManagerDemo.min.js')
     },
     loadGame(fileName){
       // remove old game first
@@ -31,8 +41,11 @@ export default {
           js.src = `src/phaser/${fileName}`;
           document.body.appendChild(js);
           js.onload = (() => {
-            __phaser.init(this.$el, this, {width: 640, height: 480});
+            __phaser.init(this.$el, this, {width: 640, height: 640});
           })
+    },
+    loadFile(file){
+      this.loadGame(file)
     }
   },
   destroyed() {

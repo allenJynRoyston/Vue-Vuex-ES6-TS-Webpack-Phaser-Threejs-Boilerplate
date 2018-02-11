@@ -6,248 +6,89 @@ var PhaserGameObject = (function () {
         };
     }
     PhaserGameObject.prototype.init = function (el, parent, options) {
-        var phaserMaster = new PHASER_MASTER({ game: new Phaser.Game(options.width, options.height, Phaser.WEBGL, el, { preload: preload, update: update }), resolution: { width: options.width, height: options.height } }), phaserControls = new PHASER_CONTROLS(), phaserMouse = new PHASER_MOUSE({ showDebugger: false }), phaserSprites = new PHASER_SPRITE_MANAGER(), phaserTexts = new PHASER_TEXT_MANAGER(), phaserButtons = new PHASER_BUTTON_MANAGER();
-        var button;
+        var phaserMaster = new PHASER_MASTER({ game: new Phaser.Game(options.width, options.height, Phaser.WEBGL, el, { preload: preload, create: create, update: update }), resolution: { width: options.width, height: options.height } }), phaserControls = new PHASER_CONTROLS(), phaserMouse = new PHASER_MOUSE({ showDebugger: false }), phaserSprites = new PHASER_SPRITE_MANAGER(), phaserBmd = new PHASER_BITMAPDATA_MANAGER(), phaserTexts = new PHASER_TEXT_MANAGER(), phaserButtons = new PHASER_BUTTON_MANAGER(), phaserGroup = new PHASER_GROUP_MANAGER();
         function preload() {
             var game = phaserMaster.game();
             game.load.enableParallel = true;
             game.stage.backgroundColor = '#2f2f2f';
-            game.load.image('gameTitle', 'src/assets/game/demo1/titles/100x100.jpg');
-            game.load.image('ship', 'src/assets/game/demo1/images/ship.png');
-            game.load.image('orangeBtn', 'src/assets/game/demo1/images/orangeBtn.png');
-            game.load.audio('intro-music', ['src/assets/game/demo1/music/far-sight.ogg']);
-            game.load.audio('select', ['src/assets/game/demo1/sound/Pickup_Coin.ogg']);
-            game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
-            window.WebFontConfig = {
-                active: function () { },
-                google: {
-                    families: ['Press Start 2P']
-                }
-            };
+            game.load.image('demoImage', 'src/assets/game/demo1/images/star.png');
+            game.load.image('demoImage2', 'src/assets/game/demo1/images/ship.png');
             game.load.bitmapFont('gem', 'src/assets/fonts/gem.png', 'src/assets/fonts/gem.xml');
             phaserMaster.setState('PRELOAD');
             new PHASER_PRELOADER({ game: game, delayInSeconds: 0, done: function () { preloadComplete(); } });
         }
+        function create() {
+            var game = phaserMaster.game();
+            phaserControls.assign(game);
+            phaserMouse.assign(game);
+            phaserSprites.assign(game);
+            phaserBmd.assign(game);
+            phaserTexts.assign(game);
+            phaserButtons.assign(game);
+            phaserGroup.assign(game);
+        }
         function preloadComplete() {
             var game = phaserMaster.game();
-            phaserControls.assign({ game: game });
-            phaserMouse.assign({ game: game });
-            phaserSprites.assign({ game: game });
-            phaserTexts.assign({ game: game });
-            phaserButtons.assign({ game: game });
-            phaserSprites.addSprite({ x: game.world.centerX - 150, y: game.world.centerY + 50, name: 'sprite1', group: 'group1', reference: 'ship' });
-            phaserSprites.addSprite({ x: game.world.centerX, y: game.world.centerY + 50, name: 'sprite2', group: 'group1', reference: 'ship' });
-            phaserSprites.addSprite({ x: game.world.centerX + 150, y: game.world.centerY + 50, name: 'sprite3', group: 'group1', reference: 'ship' });
-            phaserSprites.getGroup('group1').forEach(function (sprite, index) {
-                sprite.anchor.set(0.5);
-                sprite.scale.setTo(1, 1);
-                sprite.alpha = 1;
+            var padding = 15;
+            var header1 = phaserTexts.add({ name: 'header', font: 'gem', size: 18, default: 'Sprite Class Manager Debugger' });
+            phaserTexts.alignToTopCenter('header', 10);
+            phaserGroup.layer(10).add(header1);
+            var instructions = phaserTexts.add({ name: 'instructions', size: 14, font: 'gem', default: "Press [A] to create a sprite in group 1.\nPress [S] to create a sprite in group 2.\nPress [D] to delete a sprite in group 1.\nPress [F] to delete a sprite in group 2.\nPress [Q] to delete all sprites in group 1.\nPress [W] to delete all sprites in group 2.\nPress [BACKSPACE] to toggle visiblity of all sprites.\nPress [W] to delete all sprites in group 2.\n"
             });
-            var setToRotate = function () {
-                phaserMaster.setState('ROTATE');
-                phaserTexts.get('state').text = "Current state: " + phaserMaster.getCurrentState();
-                phaserTexts.get('instructions').maxWidth = game.canvas.width - 10;
-                phaserTexts.get('instructions').text = 'Rotate ships individually with A, S, D or use the directional arrows to move them all.  Pressing ENTER will reset them to their starting location.';
-                phaserTexts.get('instructions').y = game.canvas.height - (phaserTexts.get('instructions').height + 15);
-            };
-            var setToScale = function () {
-                phaserMaster.setState('SCALE');
-                phaserTexts.get('state').text = "Current state: " + phaserMaster.getCurrentState();
-                phaserTexts.get('instructions').maxWidth = game.canvas.width - 10;
-                phaserTexts.get('instructions').text = 'Scale ships individually with A, S, D or use the directional arrows to scale them all.  Pressing ENTER will reset them to their original size.';
-                phaserTexts.get('instructions').y = game.canvas.height - (phaserTexts.get('instructions').height + 15);
-            };
-            var setToMove = function () {
-                phaserMaster.setState('MOVE');
-                phaserTexts.get('state').text = "Current state: " + phaserMaster.getCurrentState();
-                phaserTexts.get('instructions').maxWidth = game.canvas.width - 10;
-                phaserTexts.get('instructions').text = 'Move each ship individually by holding A, S, D and a directional arrow or move all of them by using just the directional arrows.';
-                phaserTexts.get('instructions').y = game.canvas.height - (phaserTexts.get('instructions').height + 15);
-            };
-            phaserButtons.add({ name: 'btn1', group: 'group1', x: game.world.centerX - 175, y: 100, reference: 'orangeBtn', onclick: function () { setToRotate(); } });
-            phaserButtons.add({ name: 'btn2', group: 'group1', x: game.world.centerX, y: 100, reference: 'orangeBtn', onclick: function () { setToScale(); } });
-            phaserButtons.add({ name: 'btn3', group: 'group1', x: game.world.centerX + 175, y: 100, reference: 'orangeBtn', onclick: function () { setToMove(); } });
-            phaserButtons.getGroup('group1').forEach(function (btn, index) {
-                btn.anchor.set(0.5);
-                btn.scale.setTo(.5, .5);
-            });
-            phaserTexts.add({ name: 'label1', group: 'instructions', font: 'gem', x: game.world.centerX - 225, y: 85, size: 32, default: 'ROTATE' });
-            phaserTexts.add({ name: 'label2', group: 'instructions', font: 'gem', x: game.world.centerX - 40, y: 85, size: 32, default: 'SCALE' });
-            phaserTexts.add({ name: 'label3', group: 'instructions', font: 'gem', x: game.world.centerX + 145, y: 85, size: 32, default: 'MOVE' });
-            phaserTexts.add({ name: 'status', group: 'instructions', font: 'gem', x: 10, y: 10, size: 16, default: 'Click on a button to change the action:' });
-            phaserTexts.add({ name: 'state', group: 'instructions', font: 'gem', x: 10, y: 30, size: 16, default: '' });
-            phaserTexts.add({ name: 'instructions', group: 'instructions', font: 'gem', x: 10, y: game.canvas.height - 80, size: 16, default: '' });
-            setToMove();
+            phaserTexts.get('instructions').maxWidth = game.canvas.width - padding;
+            phaserTexts.alignToBottomLeftCorner('instructions', 10);
+            phaserGroup.layer(10).add(instructions);
+            phaserBmd.addGradient({ name: 'bgGradient', start: '#0000FF', end: '#00008b', width: padding, height: padding, render: false });
+            var instructionbox = phaserSprites.add({ x: 0, y: game.canvas.height - instructions.height - padding, name: "spriteBg1", reference: phaserBmd.get('bgGradient').cacheBitmapData });
+            instructionbox.width = instructions.width + padding * 2;
+            instructionbox.height = instructions.height + padding * 2;
+            var headerbox = phaserSprites.add({ x: 0, y: 0, name: "spriteBg2", reference: phaserBmd.get('bgGradient').cacheBitmapData });
+            headerbox.width = game.canvas.width;
+            headerbox.height = header1.height + padding * 2;
+            phaserGroup.layer(9).add(instructionbox);
+            phaserGroup.layer(9).add(headerbox);
+            phaserMaster.changeState('READY');
         }
         function update() {
             if (phaserControls.isDebuggerEnabled()) {
                 phaserControls.updateDebugger();
             }
             phaserMouse.updateDebugger();
-            if (phaserMaster.checkState('PRELOAD') && !__phaser.global.pause) {
+            var game = phaserMaster.game();
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'A', delay: 100 })) {
+                var newSprite = phaserSprites.add({ name: "sprite_" + phaserSprites.count().unique, group: 'spriteGroup1', reference: 'demoImage', x: game.world.randomX, y: game.world.randomY });
+                phaserGroup.layer(0).add(newSprite);
             }
-            if (phaserMaster.checkState('ROTATE') && !__phaser.global.pause) {
-                rotateLoop();
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'B', delay: 100 })) {
+                var newSprite = phaserSprites.add({ name: "sprite_" + phaserSprites.count().unique, group: 'spriteGroup2', reference: 'demoImage2', x: game.world.randomX, y: game.world.randomY });
+                phaserGroup.layer(1).add(newSprite);
             }
-            if (phaserMaster.checkState('SCALE') && !__phaser.global.pause) {
-                scaleLoop();
-            }
-            if (phaserMaster.checkState('MOVE') && !__phaser.global.pause) {
-                moveLoop();
-            }
-        }
-        function rotateLoop() {
-            if (phaserControls.read('A').active) {
-                phaserSprites.get('sprite1').angle += 5;
-            }
-            if (phaserControls.read('B').active) {
-                phaserSprites.get('sprite2').angle += 5;
-            }
-            if (phaserControls.read('X').active) {
-                phaserSprites.get('sprite3').angle += 5;
-            }
-            if (phaserControls.read('LEFT').active) {
-                for (var _i = 0, _a = phaserSprites.getGroup('group1'); _i < _a.length; _i++) {
-                    var sprite = _a[_i];
-                    sprite.angle -= 5;
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'X', delay: 100 })) {
+                if (phaserSprites.getGroup('spriteGroup1').length > 0) {
+                    phaserSprites.destroy("" + phaserSprites.getGroup('spriteGroup1')[0].name);
                 }
             }
-            if (phaserControls.read('RIGHT').active) {
-                for (var _b = 0, _c = phaserSprites.getGroup('group1'); _b < _c.length; _b++) {
-                    var sprite = _c[_b];
-                    sprite.angle += 5;
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'Y', delay: 100 })) {
+                if (phaserSprites.getGroup('spriteGroup2').length > 0) {
+                    phaserSprites.destroy("" + phaserSprites.getGroup('spriteGroup2')[0].name);
                 }
             }
-            if (phaserControls.read('UP').active) {
-                for (var _d = 0, _e = phaserSprites.getGroup('group1'); _d < _e.length; _d++) {
-                    var sprite = _e[_d];
-                    sprite.angle -= 10;
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'R1', delay: 100 })) {
+                if (phaserSprites.count().total > 0) {
+                    phaserSprites.destroy("" + phaserSprites.getAll('ARRAY')[0].name);
                 }
             }
-            if (phaserControls.read('DOWN').active) {
-                for (var _f = 0, _g = phaserSprites.getGroup('group1'); _f < _g.length; _f++) {
-                    var sprite = _g[_f];
-                    sprite.angle += 10;
-                }
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'L1', delay: 100 })) {
+                phaserSprites.destroyGroup("spriteGroup1");
             }
-            if (phaserControls.checkWithDelay({ isActive: true, key: 'START', delay: 500 })) {
-                var game = phaserMaster.game();
-                for (var _h = 0, _j = phaserSprites.getGroup('group1'); _h < _j.length; _h++) {
-                    var sprite = _j[_h];
-                    game.add.tween(sprite).to({ angle: 0 }, 500, Phaser.Easing.Bounce.Out, true);
-                    game.add.tween(sprite.scale).to({ y: 1, x: 1 }, 500, Phaser.Easing.Bounce.Out, true);
-                    game.add.tween(sprite).to({ y: sprite.getDefaultPositions().y, x: sprite.getDefaultPositions().x }, 500, Phaser.Easing.Bounce.Out, true);
-                }
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'L2', delay: 100 })) {
+                phaserSprites.destroyGroup("spriteGroup2");
             }
-        }
-        function scaleLoop() {
-            if (phaserControls.read('A').active) {
-                phaserSprites.get('sprite1').scale.setTo(phaserSprites.get('sprite1').scale.x += .025, phaserSprites.get('sprite1').scale.y += .025);
-            }
-            if (phaserControls.read('B').active) {
-                phaserSprites.get('sprite2').scale.setTo(phaserSprites.get('sprite2').scale.x += .025, phaserSprites.get('sprite2').scale.y += .025);
-            }
-            if (phaserControls.read('X').active) {
-                phaserSprites.get('sprite3').scale.setTo(phaserSprites.get('sprite3').scale.x += .025, phaserSprites.get('sprite3').scale.y += .025);
-            }
-            if (phaserControls.read('UP').active) {
-                for (var _i = 0, _a = phaserSprites.getGroup('group1'); _i < _a.length; _i++) {
-                    var sprite = _a[_i];
-                    sprite.scale.setTo(sprite.scale.x += .05, sprite.scale.y += .05);
-                }
-            }
-            if (phaserControls.read('DOWN').active) {
-                for (var _b = 0, _c = phaserSprites.getGroup('group1'); _b < _c.length; _b++) {
-                    var sprite = _c[_b];
-                    sprite.scale.setTo(sprite.scale.x -= .05, sprite.scale.y -= .05);
-                }
-            }
-            if (phaserControls.checkWithDelay({ isActive: true, key: 'START', delay: 500 })) {
-                var game = phaserMaster.game();
-                for (var _d = 0, _e = phaserSprites.getGroup('group1'); _d < _e.length; _d++) {
-                    var sprite = _e[_d];
-                    game.add.tween(sprite).to({ angle: 0 }, 500, Phaser.Easing.Bounce.Out, true);
-                    game.add.tween(sprite.scale).to({ y: 1, x: 1 }, 500, Phaser.Easing.Bounce.Out, true);
-                    game.add.tween(sprite).to({ y: sprite.getDefaultPositions().y, x: sprite.getDefaultPositions().x }, 500, Phaser.Easing.Bounce.Out, true);
-                }
-            }
-        }
-        function moveLoop() {
-            if (phaserControls.read('A').active) {
-                if (phaserControls.read('UP').active) {
-                    phaserSprites.get('sprite1').y -= 5;
-                }
-                if (phaserControls.read('DOWN').active) {
-                    phaserSprites.get('sprite1').y += 5;
-                }
-                if (phaserControls.read('LEFT').active) {
-                    phaserSprites.get('sprite1').x -= 5;
-                }
-                if (phaserControls.read('RIGHT').active) {
-                    phaserSprites.get('sprite1').x += 5;
-                }
-            }
-            if (phaserControls.read('B').active) {
-                if (phaserControls.read('UP').active) {
-                    phaserSprites.get('sprite2').y -= 5;
-                }
-                if (phaserControls.read('DOWN').active) {
-                    phaserSprites.get('sprite2').y += 5;
-                }
-                if (phaserControls.read('LEFT').active) {
-                    phaserSprites.get('sprite2').x -= 5;
-                }
-                if (phaserControls.read('RIGHT').active) {
-                    phaserSprites.get('sprite2').x += 5;
-                }
-            }
-            if (phaserControls.read('X').active) {
-                if (phaserControls.read('UP').active) {
-                    phaserSprites.get('sprite3').y -= 5;
-                }
-                if (phaserControls.read('DOWN').active) {
-                    phaserSprites.get('sprite3').y += 5;
-                }
-                if (phaserControls.read('LEFT').active) {
-                    phaserSprites.get('sprite3').x -= 5;
-                }
-                if (phaserControls.read('RIGHT').active) {
-                    phaserSprites.get('sprite3').x += 5;
-                }
-            }
-            if (!phaserControls.read('A').active && !phaserControls.read('B').active && !phaserControls.read('X').active) {
-                if (phaserControls.read('UP').active) {
-                    for (var _i = 0, _a = phaserSprites.getGroup('group1'); _i < _a.length; _i++) {
-                        var sprite = _a[_i];
-                        sprite.y -= 5;
-                    }
-                }
-                if (phaserControls.read('DOWN').active) {
-                    for (var _b = 0, _c = phaserSprites.getGroup('group1'); _b < _c.length; _b++) {
-                        var sprite = _c[_b];
-                        sprite.y += 5;
-                    }
-                }
-                if (phaserControls.read('LEFT').active) {
-                    for (var _d = 0, _e = phaserSprites.getGroup('group1'); _d < _e.length; _d++) {
-                        var sprite = _e[_d];
-                        sprite.x -= 5;
-                    }
-                }
-                if (phaserControls.read('RIGHT').active) {
-                    for (var _f = 0, _g = phaserSprites.getGroup('group1'); _f < _g.length; _f++) {
-                        var sprite = _g[_f];
-                        sprite.x += 5;
-                    }
-                }
-            }
-            if (phaserControls.checkWithDelay({ isActive: true, key: 'START', delay: 500 })) {
-                var game = phaserMaster.game();
-                for (var _h = 0, _j = phaserSprites.getGroup('group1'); _h < _j.length; _h++) {
-                    var sprite = _j[_h];
-                    game.add.tween(sprite).to({ angle: 0 }, 500, Phaser.Easing.Bounce.Out, true);
-                    game.add.tween(sprite.scale).to({ y: 1, x: 1 }, 500, Phaser.Easing.Bounce.Out, true);
-                    game.add.tween(sprite).to({ y: sprite.getDefaultPositions().y, x: sprite.getDefaultPositions().x }, 500, Phaser.Easing.Bounce.Out, true);
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'BACK', delay: 100 })) {
+                var all = phaserSprites.getGroup('spriteGroup1').concat(phaserSprites.getGroup('spriteGroup2'));
+                for (var _i = 0, all_1 = all; _i < all_1.length; _i++) {
+                    var sprite = all_1[_i];
+                    phaserSprites.get(sprite.name).visible = !phaserSprites.get(sprite.name).visible;
                 }
             }
         }
@@ -273,27 +114,77 @@ var PHASER_BITMAPDATA_MANAGER = (function () {
             object: {}
         };
     }
-    PHASER_BITMAPDATA_MANAGER.prototype.assign = function (construct) {
-        this.game = construct.game;
+    PHASER_BITMAPDATA_MANAGER.prototype.assign = function (game) {
+        this.game = game;
     };
-    PHASER_BITMAPDATA_MANAGER.prototype.add = function () {
-    };
-    PHASER_BITMAPDATA_MANAGER.prototype.addImage = function (data) {
+    PHASER_BITMAPDATA_MANAGER.prototype.addGradient = function (params) {
         var duplicateCheck = this.bmd.array.filter(function (obj) {
-            return obj.key === data.key;
+            return obj.key === params.key;
         });
         if (duplicateCheck.length === 0) {
+            var tempBmd = this.game.make.bitmapData(params.width, params.height);
+            var grd = tempBmd.context.createLinearGradient(0, 0, 0, params.height);
+            grd.addColorStop(0, params.start);
+            grd.addColorStop(1, params.end);
+            tempBmd.context.fillStyle = grd;
+            tempBmd.context.fillRect(0, 0, params.width, params.height);
+            var cacheRef = this.game.cache.addBitmapData(params.name, tempBmd);
             var newBmd = this.game.make.bitmapData();
-            newBmd.load(data.reference);
-            newBmd.addToWorld(data.x, data.y);
-            newBmd.name = data.name;
-            newBmd.group = data.group;
+            newBmd.load(this.game.cache.getBitmapData(params.name));
+            if (params.render) {
+                newBmd.addToWorld(params.x, params.y);
+            }
+            newBmd.name = params.name;
+            newBmd.group = params.group;
+            newBmd.cacheBitmapData = cacheRef;
             this.bmd.array.push(newBmd);
-            this.bmd.object[data.name] = newBmd;
+            this.bmd.object[params.name] = newBmd;
             return newBmd;
         }
         else {
-            console.log("Duplicate key name not allowed: " + data.key);
+            console.log("Duplicate key name not allowed: " + params.name);
+        }
+    };
+    PHASER_BITMAPDATA_MANAGER.prototype.addImage = function (params) {
+        var duplicateCheck = this.bmd.array.filter(function (obj) {
+            return obj.key === params.key;
+        });
+        if (duplicateCheck.length === 0) {
+            var newBmd = this.game.make.bitmapData();
+            newBmd.load(params.reference);
+            newBmd.addToWorld(params.x, params.y);
+            if (!params.render) {
+                newBmd.cls();
+            }
+            newBmd.name = params.name;
+            newBmd.group = params.group;
+            newBmd.cacheBitmapData = params.reference;
+            this.bmd.array.push(newBmd);
+            this.bmd.object[params.name] = newBmd;
+            return newBmd;
+        }
+        else {
+            console.log("Duplicate key name not allowed: " + params.name);
+        }
+    };
+    PHASER_BITMAPDATA_MANAGER.prototype.addEmpty = function (params) {
+        var duplicateCheck = this.bmd.array.filter(function (obj) {
+            return obj.key === params.key;
+        });
+        if (duplicateCheck.length === 0) {
+            var newBmd = this.game.make.bitmapData(params.width, params.height);
+            newBmd.addToWorld(params.x, params.y);
+            if (!params.render) {
+                newBmd.cls();
+            }
+            newBmd.name = params.name;
+            newBmd.group = params.group;
+            this.bmd.array.push(newBmd);
+            this.bmd.object[params.name] = newBmd;
+            return newBmd;
+        }
+        else {
+            console.log("Duplicate key name not allowed: " + params.name);
         }
     };
     PHASER_BITMAPDATA_MANAGER.prototype.destroy = function (key) {
@@ -346,16 +237,6 @@ var PHASER_BITMAPDATA_MANAGER = (function () {
         }
         return { object: this.bmd.object, array: this.bmd.array };
     };
-    PHASER_BITMAPDATA_MANAGER.prototype.center = function (construct) {
-        if (this.bmd.object[construct.name] === undefined) {
-            console.log('Error centering sprite:  key does not exists.');
-            return null;
-        }
-        var obj = this.bmd.object[construct.name];
-        obj.x = construct.x - (obj.width / 2);
-        obj.y = construct.y - (obj.height / 2);
-        return obj;
-    };
     return PHASER_BITMAPDATA_MANAGER;
 }());
 var PHASER_BUTTON_MANAGER = (function () {
@@ -366,23 +247,23 @@ var PHASER_BUTTON_MANAGER = (function () {
             object: {}
         };
     }
-    PHASER_BUTTON_MANAGER.prototype.assign = function (construct) {
-        this.game = construct.game;
+    PHASER_BUTTON_MANAGER.prototype.assign = function (game) {
+        this.game = game.game;
     };
-    PHASER_BUTTON_MANAGER.prototype.add = function (data) {
+    PHASER_BUTTON_MANAGER.prototype.add = function (params) {
         var duplicateCheck = this.resources.array.filter(function (sprite) {
-            return sprite.name === data.name;
+            return sprite.name === params.name;
         });
         if (duplicateCheck.length === 0) {
-            var newSprite = this.game.add.button(data.x, data.y, data.reference, data.onclick);
-            newSprite.name = data.name;
-            newSprite.group = data.group || null;
+            var newSprite = this.game.add.button(params.x, params.y, params.reference, params.onclick);
+            newSprite.name = params.name;
+            newSprite.group = params.group || null;
             this.resources.array.push(newSprite);
-            this.resources.object[data.name] = newSprite;
+            this.resources.object[params.name] = newSprite;
             return newSprite;
         }
         else {
-            console.log("Duplicate key name not allowed: " + data.key);
+            console.log("Duplicate key name not allowed: " + params.name);
         }
     };
     PHASER_BUTTON_MANAGER.prototype.destroy = function (key) {
@@ -504,13 +385,13 @@ var PHASER_CONTROLS = (function () {
             delay: Array.apply(null, Array(20)).map(function () { return 0; })
         };
     }
-    PHASER_CONTROLS.prototype.assign = function (construct) {
+    PHASER_CONTROLS.prototype.assign = function (game) {
         var _this = this;
-        this.game = construct.game;
+        this.game = game;
         var style = { font: "12px Courier New", fill: "#fff", align: "left" };
         this.buttonArray.forEach(function (btn, index) {
             _this.debugger.text[btn] = null;
-            _this.debugger.text[btn] = construct.game.add.text(10, 10 + (index * 15), "", style);
+            _this.debugger.text[btn] = game.add.text(10, 10 + (index * 15), "", style);
             _this.disabledButtons[btn] = false;
         });
         var IO = {
@@ -520,7 +401,7 @@ var PHASER_CONTROLS = (function () {
             state: {}
         };
         var _loop_1 = function (btn) {
-            IO.buttons[btn] = construct.game.input.keyboard.addKey(Phaser.Keyboard[this_1.buttonMap[btn].name]);
+            IO.buttons[btn] = game.input.keyboard.addKey(Phaser.Keyboard[this_1.buttonMap[btn].name]);
             IO.sensitivityPress[btn] = null;
             IO.sensitivityBuffer[btn] = 0;
             IO.state[btn] = function () {
@@ -575,7 +456,7 @@ var PHASER_CONTROLS = (function () {
             var btn = _c[_b];
             _loop_2(btn);
         }
-        construct.game.input.keyboard.onUpCallback = function (e) {
+        game.input.keyboard.onUpCallback = function (e) {
             for (var _i = 0, _a = _this.buttonArray; _i < _a.length; _i++) {
                 var btn = _a[_i];
                 if (e.code === _this.buttonMap[btn].code) {
@@ -739,17 +620,65 @@ var PHASER_CONTROLS = (function () {
     };
     return PHASER_CONTROLS;
 }());
+var PHASER_GROUP_MANAGER = (function () {
+    function PHASER_GROUP_MANAGER() {
+        this.game = null;
+        this.group = {
+            array: [],
+            object: {}
+        };
+    }
+    PHASER_GROUP_MANAGER.prototype.assign = function (game, layers) {
+        if (layers === void 0) { layers = 10; }
+        this.game = game;
+        for (var i = 0; i <= layers; i++) {
+            var layer = game.add.group();
+            this.group.object["" + i] = layer;
+            this.group.array.push(layer);
+        }
+    };
+    PHASER_GROUP_MANAGER.prototype.layer = function (key) {
+        return this.group.object[key];
+    };
+    return PHASER_GROUP_MANAGER;
+}());
 var PHASER_MASTER = (function () {
-    function PHASER_MASTER(construct) {
-        this._game = construct.game;
-        this.resolution = construct.resolution;
+    function PHASER_MASTER(params) {
+        this._game = params.game;
+        this.resolution = params.resolution;
         this.states = {
             BOOT: 'BOOT',
             PRELOAD: 'PRELOAD',
             READY: 'READY',
         };
         this.currentState = this.states[0];
+        this.variables = {};
     }
+    PHASER_MASTER.prototype.let = function (key, value) {
+        if (value === void 0) { value = null; }
+        if ((this.variables[key] === undefined)) {
+            this.variables[key] = value;
+        }
+        else {
+            console.log("Cannot LET duplicate key in PHASER_MASTER: " + key);
+        }
+    };
+    PHASER_MASTER.prototype.forceLet = function (key, value) {
+        if (value === void 0) { value = null; }
+        this.variables[key] = value;
+    };
+    PHASER_MASTER.prototype.delete = function (key) {
+        delete this.variables[key];
+    };
+    PHASER_MASTER.prototype.get = function (key) {
+        if (this.variables[key] !== undefined) {
+            return this.variables[key];
+        }
+        else {
+            console.log("Cannot GET a variable that does not exist in PHASER_MASTER.");
+            return null;
+        }
+    };
     PHASER_MASTER.prototype.changeState = function (state) {
         if (state === void 0) { state = null; }
         var _state = state.toUpperCase();
@@ -782,7 +711,7 @@ var PHASER_MASTER = (function () {
     return PHASER_MASTER;
 }());
 var PHASER_MOUSE = (function () {
-    function PHASER_MOUSE(construct) {
+    function PHASER_MOUSE(params) {
         this.game = null;
         this.clickSensitvity = { QUICK: 1, SHORT: 50, LONG: 150, SUPERLONG: 300 };
         this.mouseMapping = [0, 1, 2];
@@ -805,14 +734,14 @@ var PHASER_MOUSE = (function () {
             delay: Array.apply(null, Array(2)).map(function () { return 0; })
         };
         this.debugger = {
-            enabled: construct.showDebugger === undefined ? false : construct.showDebugger,
+            enabled: params.showDebugger === undefined ? false : params.showDebugger,
             text: {},
             pointer: null
         };
     }
-    PHASER_MOUSE.prototype.assign = function (construct) {
+    PHASER_MOUSE.prototype.assign = function (game) {
         var _this = this;
-        this.game = construct.game;
+        this.game = game;
         var _loop_3 = function (key) {
             this_3.metrics.sensitivityPress[key] = null;
             this_3.metrics.sensitivityBuffer[key] = 0;
@@ -845,6 +774,7 @@ var PHASER_MOUSE = (function () {
             _this.debugger.text[btn] = _this.game.add.text(5, _this.game.height - 35 - (index * 15), "", style);
         });
         this.debugger.pointer = this.game.add.text(5, this.game.height - 20, "", style);
+        game.canvas.oncontextmenu = function (e) { e.preventDefault(); };
     };
     PHASER_MOUSE.prototype.checkMouseClick = function () {
         var mouseKey = 0;
@@ -921,9 +851,9 @@ var PHASER_MOUSE = (function () {
     return PHASER_MOUSE;
 }());
 var PHASER_PRELOADER = (function () {
-    function PHASER_PRELOADER(construct) {
-        this.game = construct.game;
-        this.init(construct.delayInSeconds, construct.done);
+    function PHASER_PRELOADER(params) {
+        this.game = params.game;
+        this.init(params.delayInSeconds, params.done);
     }
     PHASER_PRELOADER.prototype.init = function (delay, done) {
         var _this = this;
@@ -957,67 +887,74 @@ var PHASER_SPRITE_MANAGER = (function () {
             array: [],
             object: {}
         };
+        this.spriteCount = 0;
     }
-    PHASER_SPRITE_MANAGER.prototype.assign = function (construct) {
-        this.game = construct.game;
+    PHASER_SPRITE_MANAGER.prototype.assign = function (game) {
+        this.game = game;
     };
-    PHASER_SPRITE_MANAGER.prototype.addSprite = function (data) {
+    PHASER_SPRITE_MANAGER.prototype.add = function (params) {
         var duplicateCheck = this.sprites.array.filter(function (obj) {
-            return obj.name === data.name;
+            return obj.name === params.name;
         });
         if (duplicateCheck.length === 0) {
-            var newSprite = this.game.add.sprite(data.x, data.y, data.reference);
-            newSprite.name = data.name;
-            newSprite.group = data.group || null;
-            newSprite.defaultPosition = { x: data.x, y: data.y };
+            var newSprite = this.game.add.sprite(params.x, params.y, params.reference);
+            newSprite.name = params.name;
+            newSprite.group = params.group || null;
+            newSprite.defaultPosition = { x: params.x, y: params.y };
             newSprite.setDefaultPositions = function (x, y) { this.defaultPosition.x = x, this.defaultPosition.y = y; };
             newSprite.getDefaultPositions = function () { return this.defaultPosition; };
             this.sprites.array.push(newSprite);
-            this.sprites.object[data.name] = newSprite;
+            this.sprites.object[params.name] = newSprite;
             return newSprite;
         }
         else {
-            console.log("Duplicate key name not allowed: " + data.key);
+            console.log("Duplicate key name not allowed: " + params.name);
         }
     };
-    PHASER_SPRITE_MANAGER.prototype.destroy = function (key) {
-        var keys = [];
-        var deleteArray = this.sprites.array.filter(function (sprite) {
-            return sprite.name === name;
-        });
-        for (var _i = 0, deleteArray_1 = deleteArray; _i < deleteArray_1.length; _i++) {
-            var obj = deleteArray_1[_i];
-            keys.push(obj.name);
-            obj.destroy();
+    PHASER_SPRITE_MANAGER.prototype.destroy = function (name) {
+        if (this.sprites.object[name] !== undefined) {
+            var destroyed = [];
+            var deleteArray = this.sprites.array.filter(function (obj) {
+                return obj.name === name;
+            });
+            for (var _i = 0, deleteArray_1 = deleteArray; _i < deleteArray_1.length; _i++) {
+                var obj = deleteArray_1[_i];
+                destroyed.push(obj.name);
+                obj.destroy();
+            }
+            delete this.sprites.object[name];
+            this.sprites.array = this.sprites.array.filter(function (obj) {
+                return obj.name !== name;
+            });
+            return destroyed;
         }
-        delete this.sprites.object[key];
-        this.sprites.array = this.sprites.array.filter(function (obj) {
-            return obj.name !== key;
-        });
-        return keys;
+        else {
+            console.log("Cannot delete " + name + " because it does not exist.");
+            return null;
+        }
     };
-    PHASER_SPRITE_MANAGER.prototype.destroyGroup = function (key) {
-        var keys = [];
+    PHASER_SPRITE_MANAGER.prototype.destroyGroup = function (name) {
+        var destroyed = [];
         var deleteArray = this.sprites.array.filter(function (obj) {
-            return obj.group === key;
+            return obj.group === name;
         });
         for (var _i = 0, deleteArray_2 = deleteArray; _i < deleteArray_2.length; _i++) {
             var sprite = deleteArray_2[_i];
-            keys.push(sprite.key);
+            destroyed.push(sprite.name);
             sprite.destroy();
         }
-        delete this.sprites.object[key];
+        delete this.sprites.object[name];
         this.sprites.array = this.sprites.array.filter(function (obj) {
-            return obj.group !== key;
+            return obj.group !== name;
         });
-        return keys;
+        return destroyed;
     };
-    PHASER_SPRITE_MANAGER.prototype.get = function (key) {
-        return this.sprites.object[key];
+    PHASER_SPRITE_MANAGER.prototype.get = function (name) {
+        return this.sprites.object[name];
     };
-    PHASER_SPRITE_MANAGER.prototype.getGroup = function (key) {
-        return this.sprites.array.filter(function (sprite) {
-            return sprite.group === key;
+    PHASER_SPRITE_MANAGER.prototype.getGroup = function (name) {
+        return this.sprites.array.filter(function (obj) {
+            return obj.group === name;
         });
     };
     PHASER_SPRITE_MANAGER.prototype.getAll = function (type) {
@@ -1030,15 +967,28 @@ var PHASER_SPRITE_MANAGER = (function () {
         }
         return { object: this.sprites.object, array: this.sprites.array };
     };
-    PHASER_SPRITE_MANAGER.prototype.center = function (construct) {
-        if (this.sprites.object[construct.name] === undefined) {
+    PHASER_SPRITE_MANAGER.prototype.count = function () {
+        this.spriteCount++;
+        return { total: this.sprites.array.length, unique: this.spriteCount };
+    };
+    PHASER_SPRITE_MANAGER.prototype.centerWorld = function (name) {
+        if (this.sprites.object[name] === undefined) {
             console.log('Error centering sprite:  key does not exists.');
             return null;
         }
-        var sprite = this.sprites.object[construct.name];
-        sprite.x = construct.x - (sprite.width / 2);
-        sprite.y = construct.y - (sprite.height / 2);
-        return sprite;
+        var obj = this.sprites.object[name];
+        obj.alignIn(this.game.world.bounds, Phaser.CENTER);
+        return obj;
+    };
+    PHASER_SPRITE_MANAGER.prototype.centerOnPoint = function (name, x, y) {
+        if (this.sprites.object[name] === undefined) {
+            console.log('Error centering sprite:  key does not exists.');
+            return null;
+        }
+        var obj = this.sprites.object[name];
+        obj.x = x - (obj.width / 2);
+        obj.y = y - (obj.height / 2);
+        return obj;
     };
     return PHASER_SPRITE_MANAGER;
 }());
@@ -1050,23 +1000,27 @@ var PHASER_TEXT_MANAGER = (function () {
             object: {}
         };
     }
-    PHASER_TEXT_MANAGER.prototype.assign = function (construct) {
-        this.game = construct.game;
+    PHASER_TEXT_MANAGER.prototype.assign = function (game) {
+        this.game = game;
     };
-    PHASER_TEXT_MANAGER.prototype.add = function (data) {
+    PHASER_TEXT_MANAGER.prototype.add = function (params) {
         var duplicateCheck = this.texts.array.filter(function (obj) {
-            return obj.name === data.name;
+            return obj.name === params.name;
         });
+        params.x = params.x ? params.x : 0;
+        params.y = params.y ? params.x : 0;
+        params.group = params.group ? params.group : null;
+        params.size = params.size ? params.size : 12;
         if (duplicateCheck.length === 0) {
-            var newText = this.game.add.bitmapText(data.x, data.y, data.font, data.default, data.size);
-            newText.name = data.name;
-            newText.group = data.group || null;
+            var newText = this.game.add.bitmapText(params.x, params.y, params.font, params.default, params.size);
+            newText.name = params.name;
+            newText.group = params.group;
             this.texts.array.push(newText);
-            this.texts.object[data.name] = newText;
+            this.texts.object[params.name] = newText;
             return newText;
         }
         else {
-            console.log("Duplicate key name not allowed: " + data.key);
+            console.log("Duplicate key name not allowed: " + params.name);
         }
     };
     PHASER_TEXT_MANAGER.prototype.destroy = function (key) {
@@ -1119,14 +1073,115 @@ var PHASER_TEXT_MANAGER = (function () {
         }
         return { object: this.texts.object, array: this.texts.array };
     };
-    PHASER_TEXT_MANAGER.prototype.center = function (construct) {
-        if (this.texts.object[construct.name] === undefined) {
+    PHASER_TEXT_MANAGER.prototype.alignToBottomLeftCorner = function (name, padding) {
+        if (padding === void 0) { padding = 0; }
+        if (this.texts.object[name] === undefined) {
             console.log('Error centering sprite:  key does not exists.');
             return null;
         }
-        var text = this.texts.object[construct.name];
-        text.x = construct.x - (text.width / 2);
-        text.y = construct.y - (text.height / 2);
+        var text = this.texts.object[name], game = this.game;
+        text.x = padding;
+        text.y = game.canvas.height - text.height - padding;
+        return text;
+    };
+    PHASER_TEXT_MANAGER.prototype.alignToBottomCenter = function (name, padding) {
+        if (padding === void 0) { padding = 0; }
+        if (this.texts.object[name] === undefined) {
+            console.log('Error centering sprite:  key does not exists.');
+            return null;
+        }
+        var text = this.texts.object[name], game = this.game;
+        text.x = (game.canvas.width / 2) - (text.width / 2);
+        text.y = game.canvas.height - text.height - padding;
+        return text;
+    };
+    PHASER_TEXT_MANAGER.prototype.alignToBottomRightCorner = function (name, padding) {
+        if (padding === void 0) { padding = 0; }
+        if (this.texts.object[name] === undefined) {
+            console.log('Error centering sprite:  key does not exists.');
+            return null;
+        }
+        var text = this.texts.object[name], game = this.game;
+        text.x = game.canvas.width - text.width - padding;
+        text.y = game.canvas.height - text.height - padding;
+        return text;
+    };
+    PHASER_TEXT_MANAGER.prototype.alignToCenterRight = function (name, padding) {
+        if (padding === void 0) { padding = 0; }
+        if (this.texts.object[name] === undefined) {
+            console.log('Error centering sprite:  key does not exists.');
+            return null;
+        }
+        var text = this.texts.object[name], game = this.game;
+        text.x = game.canvas.width - text.width - padding;
+        text.y = (game.canvas.height / 2) - (text.height / 2);
+        return text;
+    };
+    PHASER_TEXT_MANAGER.prototype.alignToTopRightCorner = function (name, padding) {
+        if (padding === void 0) { padding = 0; }
+        if (this.texts.object[name] === undefined) {
+            console.log('Error centering sprite:  key does not exists.');
+            return null;
+        }
+        var text = this.texts.object[name], game = this.game;
+        text.x = game.canvas.width - text.width - padding;
+        text.y = padding;
+        return text;
+    };
+    PHASER_TEXT_MANAGER.prototype.alignToTopCenter = function (name, padding) {
+        if (padding === void 0) { padding = 0; }
+        if (this.texts.object[name] === undefined) {
+            console.log('Error centering sprite:  key does not exists.');
+            return null;
+        }
+        var text = this.texts.object[name], game = this.game;
+        text.x = (game.canvas.width / 2) - (text.width / 2) - padding;
+        text.y = padding;
+        return text;
+    };
+    PHASER_TEXT_MANAGER.prototype.alignToTopLeftCorner = function (name, padding) {
+        if (padding === void 0) { padding = 0; }
+        if (this.texts.object[name] === undefined) {
+            console.log('Error centering sprite:  key does not exists.');
+            return null;
+        }
+        var text = this.texts.object[name], game = this.game;
+        text.x = padding;
+        text.y = padding;
+        return text;
+    };
+    PHASER_TEXT_MANAGER.prototype.alignToCenterLeft = function (name, padding) {
+        if (padding === void 0) { padding = 0; }
+        if (this.texts.object[name] === undefined) {
+            console.log('Error centering sprite:  key does not exists.');
+            return null;
+        }
+        var text = this.texts.object[name], game = this.game;
+        text.x = padding;
+        text.y = (game.canvas.height / 2) - (text.height / 2);
+        return text;
+    };
+    PHASER_TEXT_MANAGER.prototype.alignToCenter = function (name, padding) {
+        if (padding === void 0) { padding = 0; }
+        if (this.texts.object[name] === undefined) {
+            console.log('Error centering sprite:  key does not exists.');
+            return null;
+        }
+        var text = this.texts.object[name], game = this.game;
+        text.x = (game.canvas.width / 2) - (text.width / 2);
+        text.y = (game.canvas.height / 2) - (text.height / 2);
+        return text;
+    };
+    PHASER_TEXT_MANAGER.prototype.center = function (name, offsetx, offsety) {
+        if (offsetx === void 0) { offsetx = 0; }
+        if (offsety === void 0) { offsety = 0; }
+        if (this.texts.object[name] === undefined) {
+            console.log('Error centering sprite:  key does not exists.');
+            return null;
+        }
+        var text = this.texts.object[name], game = this.game;
+        text.x = (game.canvas.width / 2) - (text.width / 2) + offsetx;
+        text.y = (game.canvas.height / 2) - (text.height / 2) + offsety;
         return text;
     };
     return PHASER_TEXT_MANAGER;

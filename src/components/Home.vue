@@ -39,18 +39,12 @@
 </template>
 
 <script>
-import shortParagraph1 from "../assets/images/site/short-paragraph.png"
-
 export default {
   name: 'home',
   data () {
     return {
       store: this.$store,
-      shortParagraph1: shortParagraph1
     }
-  },
-  methods: {
-
   }
 }
 </script>
@@ -59,6 +53,6 @@ export default {
   .column
     border: 1px solid white
     background-color: lightgray
-    color: white
+    color: black
     margin-top: 10px
 </style>

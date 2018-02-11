@@ -1,10 +1,10 @@
 <template lang='pug'>
   #app-layout
-    overlay
-    main-header
-    navigation
-    router-view
-    main-footer
+    site-overlay
+    site-header
+    site-navigation
+    router-view#site-layout
+    site-footer
 </template>
 
 <script>
@@ -72,5 +72,6 @@ export default {
 </style>
 
 <style lang="sass" scoped>
-
+  #site-layout
+    min-height: 1200px
 </style>

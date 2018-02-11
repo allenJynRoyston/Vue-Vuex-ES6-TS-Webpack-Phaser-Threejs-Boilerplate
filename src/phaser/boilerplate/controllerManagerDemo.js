@@ -6,12 +6,11 @@ var PhaserGameObject = (function () {
         };
     }
     PhaserGameObject.prototype.init = function (el, parent, options) {
-        var phaserMaster = new PHASER_MASTER({ game: new Phaser.Game(options.width, options.height, Phaser.WEBGL, el, { preload: preload, create: create, update: update }), resolution: { width: options.width, height: options.height } }), phaserControls = new PHASER_CONTROLS(), phaserMouse = new PHASER_MOUSE({ showDebugger: false }), phaserSprites = new PHASER_SPRITE_MANAGER(), phaserBmd = new PHASER_BITMAPDATA_MANAGER(), phaserTexts = new PHASER_TEXT_MANAGER(), phaserButtons = new PHASER_BUTTON_MANAGER(), phaserGroup = new PHASER_GROUP_MANAGER();
+        var phaserMaster = new PHASER_MASTER({ game: new Phaser.Game(options.width, options.height, Phaser.WEBGL, el, { preload: preload, create: create, update: update }), resolution: { width: options.width, height: options.height } }), phaserControls = new PHASER_CONTROLS(), phaserMouse = new PHASER_MOUSE({ showDebugger: true }), phaserSprites = new PHASER_SPRITE_MANAGER(), phaserBmd = new PHASER_BITMAPDATA_MANAGER(), phaserTexts = new PHASER_TEXT_MANAGER(), phaserButtons = new PHASER_BUTTON_MANAGER(), phaserGroup = new PHASER_GROUP_MANAGER();
         function preload() {
             var game = phaserMaster.game();
             game.load.enableParallel = true;
             game.stage.backgroundColor = '#2f2f2f';
-            game.load.image('demoImage', 'src/assets/game/demo1/images/starfield.png');
             game.load.bitmapFont('gem', 'src/assets/fonts/gem.png', 'src/assets/fonts/gem.xml');
             phaserMaster.setState('PRELOAD');
             new PHASER_PRELOADER({ game: game, delayInSeconds: 0, done: function () { preloadComplete(); } });
@@ -28,15 +27,11 @@ var PhaserGameObject = (function () {
         }
         function preloadComplete() {
             var game = phaserMaster.game();
-            phaserBmd.addImage({ name: "bmdDemoImg", group: 'bmd1', reference: 'demoImage', x: 65, y: 0, render: false });
-            phaserMaster.let('shape', new Phaser.Rectangle(0, phaserBmd.get('bmdDemoImg').height, phaserBmd.get('bmdDemoImg').width, 1));
-            phaserMaster.let('dropTime', game.time.now + 250);
-            phaserMaster.let('beginFill', false);
             var padding = 15;
             var header1 = phaserTexts.add({ name: 'header', font: 'gem', size: 18, default: 'Control Manager Debugger' });
             phaserTexts.alignToTopCenter('header', 10);
             phaserGroup.layer(10).add(header1);
-            var instructions = phaserTexts.add({ name: 'instructions', size: 14, font: 'gem', default: "Press [ENTER] to begin fill."
+            var instructions = phaserTexts.add({ name: 'instructions', size: 14, font: 'gem', default: "Press [`] to open input debugger.\nPress [ENTER] to hide dialog box.\n"
             });
             phaserTexts.get('instructions').maxWidth = game.canvas.width - padding;
             phaserTexts.center('instructions', 0, 100);
@@ -52,31 +47,16 @@ var PhaserGameObject = (function () {
             phaserGroup.layer(9).add(headerbox);
             phaserMaster.changeState('READY');
         }
-        function generateHexColor() {
-            return '#' + ((0.5 + 0.5 * Math.random()) * 0xFFFFFF << 0).toString(16);
-        }
         function update() {
             if (phaserControls.isDebuggerEnabled()) {
                 phaserControls.updateDebugger();
             }
             phaserMouse.updateDebugger();
-            var beginFill = phaserMaster.get('beginFill');
-            if (beginFill) {
-                var shape = phaserMaster.get('shape'), dropTime = phaserMaster.get('dropTime');
-                if (shape.y > 0 && phaserMaster.game().time.now > dropTime) {
-                    for (var y = 0; y < shape.y; y++) {
-                        phaserBmd.get('bmdDemoImg').copyRect('demoImage', shape, 0, y);
-                    }
-                    shape.y--;
-                    dropTime = phaserMaster.game().time.now + 10;
-                }
-            }
-            if (phaserControls.read('START').active) {
-                phaserMaster.forceLet('beginFill', true);
+            if (phaserControls.checkWithDelay({ isActive: true, key: 'START', delay: 250 })) {
                 phaserSprites.get('spriteBg1').visible = !phaserSprites.get('spriteBg1').visible;
                 phaserSprites.get('spriteBg2').visible = !phaserSprites.get('spriteBg2').visible;
-                phaserTexts.get('header').visible = false;
-                phaserTexts.get('instructions').visible = false;
+                phaserTexts.get('header').visible = !phaserTexts.get('header').visible;
+                phaserTexts.get('instructions').visible = !phaserTexts.get('instructions').visible;
             }
         }
         parent.game = this;

@@ -23,10 +23,9 @@
 </template>
 
 <script>
-import shortParagraph1 from "../assets/images/site/short-paragraph.png"
+import shortParagraph1 from "../../assets/images/site/short-paragraph.png"
 
 export default {
-  name: 'main-header',
   data () {
     return {
       modalIsOpen: false,

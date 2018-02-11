@@ -10,17 +10,16 @@
       a(@click='setHeader(false)')
         router-link(to="/phaser") Phaser
       a(@click='setHeader(false)')
-        router-link(to="/three") Three        
+        router-link(to="/three") Three
       a.right-link(@click='setHeader(!headerIsOpen)')
         i(v-bind:class='headerIsOpen  ? "window restore icon" : "maximize icon"')
 </template>
 
 <script>
-import ninjaIcon from "../assets/images/misc/ninja-icon.png"
+import ninjaIcon from "../../assets/images/misc/ninja-icon.png"
 
 
 export default {
-  name: 'navigation',
   data () {
     return {
       logo: ninjaIcon,

@@ -4,12 +4,10 @@
       p
         span.fa.fa-spinner.fa-pulse.fa-fw
       progress.progress.is-success(v-bind:value="progress" max="100")
-
 </template>
 
 <script>
 export default {
-  name: 'overlay',
   data() {
     return {
       store: this.$store,
