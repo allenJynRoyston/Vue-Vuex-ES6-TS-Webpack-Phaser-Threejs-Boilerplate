@@ -1,14 +1,14 @@
-var PhaserGameObject = (function () {
-    function PhaserGameObject() {
+class PhaserGameObject {
+    constructor() {
         // accessible in gameObject as _this, accessible in class functions as this (obviously)
         this.game = null;
         this.global = {
             updatePause: false
         };
     }
-    PhaserGameObject.prototype.init = function (el, parent, options) {
+    init(el, parent, options) {
         // declare variables
-        var isPaused = false, dimensions = { width: options.width, height: options.height }, game = new Phaser.Game(options.width, options.height, Phaser.WEBGL, el, { create: create, update: update }), filter = null, sprite = null, _this = this;
+        let isPaused = false, dimensions = { width: options.width, height: options.height }, game = new Phaser.Game(options.width, options.height, Phaser.WEBGL, el, { create: create, update: update }), filter = null, sprite = null, _this = this;
         // make game accessible to parent element
         parent.game = this;
         // make accessible to class functions
@@ -47,10 +47,10 @@ var PhaserGameObject = (function () {
                 filter.update();
             }
         }
-    };
-    PhaserGameObject.prototype.destroy = function () {
+    }
+    destroy() {
         this.game.destroy();
-    };
-    return PhaserGameObject;
-}());
-var __phaser = new PhaserGameObject();
+    }
+}
+let __phaser = new PhaserGameObject();
+//# sourceMappingURL=ts_demo.js.map

@@ -4,27 +4,7 @@
       game-component
 </template>
 
-<script>
-
-
-export default {
-  name: 'game',
-  data () {
-    return {
-      store: this.$store,
-    }
-  },
-  methods: {
-
-  },
-  mounted(){
-    this.isReady = true
-  },
-  destroyed(){
-
-  }
-}
-</script>
+<script src='./game.js'></script>
 
 <style lang="sass" scoped>
   .game-container

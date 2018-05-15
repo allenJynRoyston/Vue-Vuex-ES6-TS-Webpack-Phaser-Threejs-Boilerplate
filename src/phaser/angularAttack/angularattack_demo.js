@@ -1,17 +1,16 @@
-var PhaserGameObject = (function () {
-    function PhaserGameObject() {
+class PhaserGameObject {
+    constructor() {
         // accessible in gameObject as _this, accessible in class functions as this (obviously)
         this.game = null;
         this.global = {
             updatePause: false
         };
     }
-    PhaserGameObject.prototype.init = function (el, parent, options) {
+    init(el, parent, options) {
         // declare variables BOILERPLATE
-        var isPaused = false, dimensions = { width: options.width, height: options.height }, game = new Phaser.Game(options.width, options.height, Phaser.WEBGL, el, { preload: preload, create: create, update: update }), _this = this;
-        debugger;
-        var text, index = 0, line = '', distance = 300, speed = 4, stars = null, max = 200, xx = [], yy = [], zz = [], buttonDelay, leftKey, rightKey, upKey, downKey, enterKey, enterA, enterB, enterX, enterY, clickSound, selectSound, style, loadingtext, loadingPercentage, splashDelay, splashScreen, gametitleart, pressStartTextDelay, pressStartText, content, zwearth, zwcity, zwoperator1, zwoperator2, zwoperator3, zwcats1, zwcats2, skiptext, pureblack;
-        var assets = {
+        let isPaused = false, dimensions = { width: options.width, height: options.height }, game = new Phaser.Game(options.width, options.height, Phaser.WEBGL, el, { preload: preload, create: create, update: update }), _this = this;
+        let text, index = 0, line = '', distance = 300, speed = 4, stars = null, max = 200, xx = [], yy = [], zz = [], buttonDelay, leftKey, rightKey, upKey, downKey, enterKey, enterA, enterB, enterX, enterY, clickSound, selectSound, style, loadingtext, loadingPercentage, splashDelay, splashScreen, gametitleart, pressStartTextDelay, pressStartText, content, zwearth, zwcity, zwoperator1, zwoperator2, zwoperator3, zwcats1, zwcats2, skiptext, pureblack;
+        let assets = {
             app: null,
             preloader: {},
             ready: {
@@ -33,7 +32,6 @@ var PhaserGameObject = (function () {
             state: "boot"
         };
         function preload() {
-            debugger;
             // set canvas color
             game.stage.backgroundColor = '#2f2f2f';
             // images
@@ -66,7 +64,7 @@ var PhaserGameObject = (function () {
             // scripts
             game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
             window.WebFontConfig = {
-                active: function () {
+                active() {
                     // do something once font is loaded
                 },
                 google: {
@@ -116,7 +114,7 @@ var PhaserGameObject = (function () {
                 assets.keybufferY[0] = true;
             }, this);
             game.input.keyboard.onUpCallback = function (e) {
-                var buttonDelay = game.time.now;
+                let buttonDelay = game.time.now;
                 if (e.code == "ArrowLeft" || e.code == "ArrowRight") {
                     assets.keybufferLR.shift();
                 }
@@ -144,7 +142,7 @@ var PhaserGameObject = (function () {
             }
             var sprites = game.add.spriteBatch();
             stars = [];
-            for (var i = 0; i < max; i++) {
+            for (let i = 0; i < max; i++) {
                 xx[i] = Math.floor(Math.random() * 800) - 400;
                 yy[i] = Math.floor(Math.random() * 600) - 300;
                 zz[i] = Math.floor(Math.random() * 1700) - 100;
@@ -186,7 +184,7 @@ var PhaserGameObject = (function () {
             loadingtext.setText("File loaded!");
             loadingPercentage.setText("");
             // start game after slight delay
-            setTimeout(function () {
+            setTimeout(() => {
                 clearPreloader();
                 // render game code
                 assets.state = "ready";
@@ -243,7 +241,7 @@ var PhaserGameObject = (function () {
             // wait for fade
             setTimeout(function () {
                 // destroy stars
-                for (var i = 0; i < max; i++) {
+                for (let i = 0; i < max; i++) {
                     stars[i].destroy();
                 }
                 // destroy titles
@@ -441,29 +439,15 @@ var PhaserGameObject = (function () {
                     }
                     //-----------
                 }
-                //-----------------
-                //-----------------
-                if (assets.state == "gameIntro") {
-                    //----------- wait for keypress
-                    if (game.time.now > buttonDelay && !assets.disableInput) {
-                        if (assets.keybufferStart[0]) {
-                            selectSound.play();
-                            startGameplay();
-                            buttonDelay = game.time.now + 250;
-                        }
-                    }
-                    //-----------
-                }
-                //-----------------
             }
             //-----------------
         }
         parent.game = this; // make game accessible to parent element
         this.game = game; // make accessible to class functions
-    };
-    PhaserGameObject.prototype.destroy = function () {
+    }
+    destroy() {
         this.game.destroy();
-    };
-    return PhaserGameObject;
-}());
-var __phaser = new PhaserGameObject();
+    }
+}
+let __phaser = new PhaserGameObject();
+//# sourceMappingURL=angularattack_demo.js.map

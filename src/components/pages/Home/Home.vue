@@ -38,16 +38,7 @@
         .column Auto
 </template>
 
-<script>
-export default {
-  name: 'home',
-  data () {
-    return {
-      store: this.$store,
-    }
-  }
-}
-</script>
+<script src='./home.js'></script>
 
 <style lang="sass" scoped>
   .column

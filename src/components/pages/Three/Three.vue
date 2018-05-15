@@ -4,27 +4,7 @@
       three-component
 </template>
 
-<script>
-
-
-export default {
-  name: 'three',
-  data () {
-    return {
-      store: this.$store,
-    }
-  },
-  methods: {
-
-  },
-  mounted(){
-    this.isReady = true
-  },
-  destroyed(){
-
-  }
-}
-</script>
+<script src='./three.js'></script>
 
 <style lang="sass" scoped>
   .game-container

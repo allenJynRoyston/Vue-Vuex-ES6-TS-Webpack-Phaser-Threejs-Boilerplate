@@ -1,5 +1,5 @@
-var ThreeObject = (function () {
-    function ThreeObject() {
+class ThreeObject {
+    constructor() {
         // accessible in gameObject as _this, accessible in class functions as this (obviously)
         this.game = null;
         this.global = {
@@ -7,9 +7,9 @@ var ThreeObject = (function () {
             updatePause: false
         };
     }
-    ThreeObject.prototype.init = function (el, parent, options) {
+    init(el, parent, options) {
         // declare variables
-        var scene = new THREE.Scene(), dimensions = { width: options.width, height: options.height }, camera = new THREE.PerspectiveCamera(75, dimensions.width / dimensions.height, 0.1, 1000), renderer = new THREE.WebGLRenderer(), geometry = new THREE.BoxGeometry(1, 1, 1), material = new THREE.MeshBasicMaterial({ color: 0x00ff00 }), cube = new THREE.Mesh(geometry, material), _this = this;
+        let scene = new THREE.Scene(), dimensions = { width: options.width, height: options.height }, camera = new THREE.PerspectiveCamera(75, dimensions.width / dimensions.height, 0.1, 1000), renderer = new THREE.WebGLRenderer(), geometry = new THREE.BoxGeometry(1, 1, 1), material = new THREE.MeshBasicMaterial({ color: 0x00ff00 }), cube = new THREE.Mesh(geometry, material), _this = this;
         // make game accessible to parent element
         parent.game = this;
         // make accessible to class functions
@@ -40,11 +40,11 @@ var ThreeObject = (function () {
         }
         ;
         //-----------------------
-    };
-    ThreeObject.prototype.destroy = function () {
+    }
+    destroy() {
         this.global.destroyed = true;
         return true;
-    };
-    return ThreeObject;
-}());
-var __three = new ThreeObject();
+    }
+}
+let __three = new ThreeObject();
+//# sourceMappingURL=ts_demo.js.map
