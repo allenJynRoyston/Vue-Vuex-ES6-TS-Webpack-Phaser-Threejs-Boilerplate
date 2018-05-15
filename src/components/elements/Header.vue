@@ -26,6 +26,7 @@
 import shortParagraph1 from "../../assets/images/site/short-paragraph.png"
 
 export default {
+  name: 'site-header',
   data () {
     return {
       modalIsOpen: false,

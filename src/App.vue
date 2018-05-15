@@ -1,10 +1,10 @@
 <template lang='pug'>
   #app-layout
-    site-overlay
-    site-header
-    site-navigation
+    siteOverlay
+    siteHeader
+    siteNavigation
     router-view#site-layout
-    site-footer
+    siteFooter
 </template>
 
 <script>

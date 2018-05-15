@@ -1,13 +1,19 @@
-var path = require('path')
-var webpack = require('webpack')
+const path = require('path')
+const webpack = require('webpack')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
+  // entry point
   entry: './src/main.js',
+
+  // output to
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
     filename: 'build.js'
   },
+
+  // modules
   module: {
     rules: [
       {
@@ -27,20 +33,15 @@ module.exports = {
         }
       },
       {
-          test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
-          loader: 'url-loader'
+        test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
+        loader: 'url-loader',
+        options: {
+          mimetype: 'image/png',
+          limit: 8192
+        }          
       },
       {
-        test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.(png|jpg|gif|svg)$/,
+        test: /\.(png|jpg|gif)$/,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]?[hash]'
@@ -48,46 +49,33 @@ module.exports = {
       }
     ]
   },
+
+  // resolves
   resolve: {
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
     }
   },
+
+  // dev server
   devServer: {
     historyApiFallback: true,
     noInfo: true
   },
+
+  // performance
   performance: {
     hints: false
   },
-  plugins: [
+
+  // plugins
+  plugins: [    
+    new CleanWebpackPlugin(['dist']),
     new webpack.ProvidePlugin({
         $: "jquery",
         jQuery: "jquery",
         "window.jQuery": "jquery",
         "root.jQuery": "jquery"
     })
-  ],
-  devtool: '#eval-source-map'
-}
-
-if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
-  // http://vue-loader.vuejs.org/en/workflow/production.html
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      compress: {
-        warnings: false
-      }
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
-    })
-  ])
+  ],  
 }
