@@ -11,6 +11,7 @@ export default {
   data () {
     return {
       game: null,
+      store: this.$store,
     }
   },
   mounted(){
@@ -20,23 +21,44 @@ export default {
     init(){
       this.loadGame('src/threeJS/ts_demo.js')
     },
-    loadGame(fileLocation){
+    async loadGame(fileLocation){
       // remove old game first
       if(this.game !== null){
-        this.game.destroy()
+        this.game = null;
       }
+
+      // load threeJS (once)
+      if(!this.store.getters._threeJSIsLoaded()){
+        await new Promise((resolve, reject) => {
+          let js = document.createElement("script");
+              js.type = "text/javascript";
+              js.src = `/node_modules/three/build/three.min.js`;
+              document.body.appendChild(js);
+              js.onload = (() => {
+                this.store.commit('setThreeJsIsLoaded', true)
+                resolve()              
+              })
+        })
+      }      
+
+      // load game file
+      await new Promise((resolve, reject) => {
+        let js = document.createElement("script");
+            js.type = "text/javascript";
+            js.src = `${fileLocation}`;
+            document.body.appendChild(js);
+            js.onload = (() => {
+              resolve()              
+            })
+      })
+
       // load new one
-      let js = document.createElement("script");
-          js.type = "text/javascript";
-          js.src = `${fileLocation}`;
-          document.body.appendChild(js);
-          js.onload = (() => {
-            __three.init(this.$el, this, {width: 800, height: 600});
-          })
+       __three.init(this.$el, this, {width: 800, height: 600});
+
     }
   },
   destroyed() {
-    this.game.destroy();
+    this.game = null;
   }
 }
 </script>

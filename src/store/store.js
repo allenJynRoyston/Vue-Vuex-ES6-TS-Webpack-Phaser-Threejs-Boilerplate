@@ -8,13 +8,17 @@ export default new Vuex.Store({
     appReady: false,
     isActive: false,
     progressBar: 0,
-    headerIsOpen: true
+    headerIsOpen: true,
+    phaserIsLoaded: false,
+    threeJSIsLoaded: false
   },
   getters: {
     _appReady: state => () => state.appReady,
     _isActive: state => () => state.isActive,
     _progressBar: state => () => state.progressBar,
-    _headerIsOpen: state => () => state.headerIsOpen
+    _headerIsOpen: state => () => state.headerIsOpen,
+    _phaserIsLoaded: state => () => state.phaserIsLoaded,
+    _threeJSIsLoaded: state => () => state.threeJSIsLoaded,
   },
   mutations: {
     setAppState(state, value){
@@ -31,6 +35,12 @@ export default new Vuex.Store({
     },
     setHeader (state, value) {
       state.headerIsOpen = value
-    }
+    },
+    setPhaserIsLoaded (state, value) {
+      state.phaserIsLoaded = value
+    },
+    setThreeJsIsLoaded (state, value) {
+      state.threeJSIsLoaded = value
+    }           
   }
 })

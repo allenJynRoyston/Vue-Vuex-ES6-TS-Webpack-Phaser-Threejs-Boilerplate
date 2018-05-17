@@ -15,6 +15,7 @@ export default {
   data () {
     return {
       game: null,
+      store: this.$store,
       demos: [
         {title: 'Sprite Class Manager', file: 'boilerplate/spriteManagerDemo.min.js'},
         {title: 'Controller Class Manager', file: 'boilerplate/controllerManagerDemo.min.js'},
@@ -27,22 +28,43 @@ export default {
     this.init()
   },
   methods: {
-    init(){
+    init(){      
       this.loadGame('boilerplate/spriteManagerDemo.min.js')
     },
-    loadGame(fileName){
+    async loadGame(fileName){
       // remove old game first
       if(this.game !== null){
         this.game.destroy()
       }
-      // load new one
-      let js = document.createElement("script");
-          js.type = "text/javascript";
-          js.src = `src/phaser/${fileName}`;
-          document.body.appendChild(js);
-          js.onload = (() => {
-            __phaser.init(this.$el, this, {width: 640, height: 640});
-          })
+      
+      // load phaser (once)
+      if(!this.store.getters._phaserIsLoaded()){
+        await new Promise((resolve, reject) => {
+          let js = document.createElement("script");
+              js.type = "text/javascript";
+              js.src = `/node_modules/phaser-ce/build/phaser.min.js`;
+              document.body.appendChild(js);
+              js.onload = (() => {
+                this.store.commit('setPhaserIsLoaded', true)
+                resolve()              
+              })
+        })
+      }
+
+      // load game file
+      await new Promise((resolve, reject) => {
+        let js = document.createElement("script");
+            js.type = "text/javascript";
+            js.src = `src/phaser/${fileName}`;
+            document.body.appendChild(js);
+            js.onload = (() => {
+              resolve()              
+            })
+      })
+
+      __phaser.init(this.$el, this, {width: 640, height: 640});
+
+
     },
     loadFile(file){
       this.loadGame(file)
