@@ -5,7 +5,7 @@ import VueResource from 'vue-resource'
 
 /* IMPORT COMPONENTS */
 // page components
-import {Home, About, Game, Three} from './components/'
+import {Home, About, Game, Three, Pixi} from './components/'
 // element components
 import {GameComponent, ThreeComponent, Navigation, Overlay, Header, Footer, Test} from './components/'
 
@@ -45,6 +45,11 @@ export default new Router({
       path: '/three',
       name: 'Three',
       component: Three
-    }
+    },
+    {
+      path: '/pixi',
+      name: 'Pixi',
+      component: Pixi
+    }    
   ]
 })

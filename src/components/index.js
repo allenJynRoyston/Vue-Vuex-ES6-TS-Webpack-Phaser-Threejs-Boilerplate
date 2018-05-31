@@ -3,6 +3,7 @@ export { default as Home } from './pages/Home/Home.vue';
 export { default as About } from './pages/About/About.vue';
 export { default as Game } from './pages/Game/Game.vue';
 export { default as Three } from './pages/Three/Three.vue';
+export { default as Pixi } from './pages/Pixi/Pixi.vue';
 
 
 // ELEMENTS

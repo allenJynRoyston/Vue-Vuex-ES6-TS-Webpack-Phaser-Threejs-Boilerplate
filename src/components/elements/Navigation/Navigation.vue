@@ -3,14 +3,8 @@
       a.left-link(@click='setHeader(true)')
         router-link(to="/" )
           img(v-bind:src='logo.default' style='height: 80px; width: auto; margin-top: -30px')
-      a(@click='setHeader(true)')
-        router-link(to="/") Home
-      a(@click='setHeader(false)')
-        router-link(to="/about") About
-      a(@click='setHeader(false)')
-        router-link(to="/phaser") Phaser
-      a(@click='setHeader(false)')
-        router-link(to="/three") Three
+      a(v-for='link in links' v-on:click='setHeader(link.expand)')
+        router-link(v-bind:to="link.goto") {{link.title}}
       a.right-link(@click='setHeader(!headerIsOpen)')
         i(v-bind:class='headerIsOpen  ? "window restore icon" : "maximize icon"')
 </template>

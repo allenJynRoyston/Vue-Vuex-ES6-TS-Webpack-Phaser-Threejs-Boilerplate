@@ -5,7 +5,14 @@ export default {
         return {
             logo: logo,
             headerIsOpen: null,
-            store: this.$store
+            store: this.$store,
+            links: [
+                { title: 'Home', goto: '/', expand: true },
+                { title: 'About', goto: '/about', expand: false },
+                { title: 'Phaser', goto: '/phaser', expand: false },
+                { title: 'Three', goto: '/three', expand: false },
+                { title: 'Pixi', goto: '/pixi', expand: false }
+            ]
         };
     },
     created() {
