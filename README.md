@@ -1,35 +1,39 @@
 ### Technologies included
-- Vue + Vuex (with ES6)
-- Webpack
-- [Bulma CSS](https://bulma.io/)
-- [Velocity](http://velocityjs.org/)
+- Vue 2.3.3 + Vuex 3.0 (with ES6 & Typescript support)
+- Webpack 3.x
+- [Skeleton CSS](http://getskeleton.com/)
+- [AnimeJS](http://animejs.com/)
 - [Phaser](https://phaser.io/)
 - [Threejs](https://threejs.org/)
-- Express
-- Font Awesome
+- Express 4.x 
 - Jasmine (Unit testing)
 
 ### Preview
-[Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/#/fun)
+(Under construction)
 
 ### Install instructions:
 ```sh
-$ git clone https://github.com/allenRoyston/vue-vuex-webpack-es6-phaser-boilerplate.git
-$ cd vue-vuex-webpack-es6-phaser-boilerplate
+$ git clone https://github.com/allenRoyston/Vue-Vuex-ES6-TS-Webpack-Phaser-Threejs-Boilerplate.git
+$ cd Vue-Vuex-ES6-TS-Webpack-Phaser-Threejs-Boilerplate
 $ npm install
-$ npm run dev (USE THIS WHEN DEVELOPING)
+$ npm run dev
 ```
 
-### Deployment instructions:
+### Autocompile .TS -> .JS (optional) (on a seperate instance)
 ```sh
-$ gulp build
+$ tsc -w
+```
 
-// TO PREVIEW WITH BUILD SCRIPT
-$ npm start
-OR 
+
+### Build instructions:
+```sh
+$ npm run build
+```
+
+### Test deployment instructions:
+```sh
 $ gulp
 ```
-
 
 ### Preload image assets -*optional*-
 If your site is going to be visually heavy, you can preload your images in src/App.vue.  This will automatically trigger the overlay to blur your site until anything contained in the array is fully loaded.  You can also alter the look/feel of the overlay by editing the src/components/Overlay.vue
