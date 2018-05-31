@@ -9,7 +9,7 @@
 - Jasmine (Unit testing)
 
 ### Preview
-(Under construction)
+[Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/#/)
 
 ### Install instructions:
 ```sh
