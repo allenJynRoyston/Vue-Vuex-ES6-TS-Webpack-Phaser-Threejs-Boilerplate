@@ -1,6 +1,6 @@
 ### Technologies included
 - Vue 2.3.3 + Vuex 3.0 (with ES6 & Typescript support)
-- Webpack 3.x
+- Webpack 4.x
 - [Skeleton CSS](http://getskeleton.com/)
 - [AnimeJS](http://animejs.com/)
 - [Phaser](https://phaser.io/)
