@@ -32,7 +32,6 @@ export default {
                 padding: this.headerIsOpen ? '15px' : '40px',
                 backgroundColor: this.headerIsOpen ? '#2f2f2f' : '#596673',
                 duration: 500,
-                easing: 'easeInOutQuart'
             });
             anime({
                 targets: document.querySelector('.left-link'),
