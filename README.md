@@ -19,8 +19,9 @@ $ npm install
 $ npm run dev
 ```
 
-### Autocompile .TS -> .JS (optional) (on a seperate instance)
+### Autocompile .TS -> .JS (optional)
 ```sh
+// open terminal on seperate instance
 $ tsc -w
 ```
 
