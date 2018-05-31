@@ -1,5 +1,5 @@
 ### Technologies included
-- Vue 2.3.3 + Vuex 3.0 (with ES6 & Typescript support)
+- Vue 2.3.3 + Vuex 3.0 (with ES6 & TypeScript support)
 - Webpack 4.x
 - [Skeleton CSS](http://getskeleton.com/)
 - [AnimeJS](http://animejs.com/)
@@ -19,7 +19,7 @@ $ npm install
 $ npm run dev
 ```
 
-### Autocompile .TS -> .JS (optional)
+### Autocompile .TS -> .JS (optional - otherwise just edit .js files)
 ```sh
 // open terminal on seperate instance
 $ tsc -w
