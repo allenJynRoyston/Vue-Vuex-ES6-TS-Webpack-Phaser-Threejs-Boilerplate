@@ -10,7 +10,8 @@ export default new Vuex.Store({
     progressBar: 0,
     headerIsOpen: true,
     phaserIsLoaded: false,
-    threeJSIsLoaded: false
+    threeJSIsLoaded: false,
+    pixiJsIsLoaded: false,
   },
   getters: {
     _appReady: state => () => state.appReady,
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     _headerIsOpen: state => () => state.headerIsOpen,
     _phaserIsLoaded: state => () => state.phaserIsLoaded,
     _threeJSIsLoaded: state => () => state.threeJSIsLoaded,
+    _pixiJSIsLoaded: state => () => state.pixiJsIsLoaded
   },
   mutations: {
     setAppState(state, value){
@@ -41,6 +43,9 @@ export default new Vuex.Store({
     },
     setThreeJsIsLoaded (state, value) {
       state.threeJSIsLoaded = value
-    }           
+    },
+    setPixiIsLoaded (state, value) {
+      state.pixiJsIsLoaded = value
+    },      
   }
 })

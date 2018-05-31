@@ -1,5 +1,5 @@
 <template lang="pug">
-  .ui.container.game-container
+  .container.game-container
     center
       game-component
 </template>

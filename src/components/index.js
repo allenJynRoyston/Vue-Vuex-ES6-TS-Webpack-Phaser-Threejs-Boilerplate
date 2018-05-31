@@ -7,6 +7,7 @@ export { default as Pixi } from './pages/Pixi/Pixi.vue';
 
 
 // ELEMENTS
+export { default as PixiComponent } from './elements/PixiComponent/PixiComponent.vue';
 export { default as GameComponent } from './elements/GameComponent/GameComponent.vue';
 export { default as ThreeComponent } from './elements/ThreeComponent/ThreeComponent.vue';
 export { default as Navigation } from './elements/Navigation/Navigation.vue';

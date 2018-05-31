@@ -35,6 +35,7 @@ export default {
               js.src = `/node_modules/phaser-ce/build/phaser.min.js`;
               document.body.appendChild(js);
               js.onload = (() => {
+                this.store.commit('setPixiIsLoaded', false)
                 this.store.commit('setPhaserIsLoaded', true)
                 resolve()              
               })
@@ -45,7 +46,7 @@ export default {
       await new Promise((resolve, reject) => {
         let js = document.createElement("script");
             js.type = "text/javascript";
-            js.src = `src/phaser/${fileName}`;
+            js.src = `src/_phaser/${fileName}`;
             document.body.appendChild(js);
             js.onload = (() => {
               resolve()              

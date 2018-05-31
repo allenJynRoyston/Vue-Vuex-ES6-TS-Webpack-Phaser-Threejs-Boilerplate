@@ -1,4 +1,4 @@
-declare var __three: any;
+declare var __pixi: any;
 
 export default {
   props: [],
@@ -13,23 +13,25 @@ export default {
   },
   methods: {
     init(){
-      this.loadGame('src/_threeJS/ts_demo.js')
+      this.loadGame('src/_pixi/pixi_demo.js')
     },
     async loadGame(fileLocation){
+
       // remove old game first
       if(this.game !== null){
         this.game = null;
       }
-
+      
       // load threeJS (once)
-      if(!this.store.getters._threeJSIsLoaded()){
+      if(!this.store.getters._pixiJSIsLoaded()){
         await new Promise((resolve, reject) => {
           let js = document.createElement("script");
               js.type = "text/javascript";
-              js.src = `/node_modules/three/build/three.min.js`;
+              js.src = `/node_modules/pixi.js/dist/pixi.min.js`;
               document.body.appendChild(js);
-              js.onload = (() => {
-                this.store.commit('setThreeJsIsLoaded', true)
+              js.onload = (() => {                
+                this.store.commit('setPixiIsLoaded', true)
+                this.store.commit('setPhaserIsLoaded', false)
                 resolve()              
               })
         })
@@ -47,11 +49,13 @@ export default {
       })
 
       // load new one
-       __three.init(this.$el, this, {width: 800, height: 600});
-
+       __pixi.init(this.$el, this, {width: 800, height: 600});
+     
     }
   },
   destroyed() {
+    //function PixiObject() {};
+    
     this.game = null;
   }
 }

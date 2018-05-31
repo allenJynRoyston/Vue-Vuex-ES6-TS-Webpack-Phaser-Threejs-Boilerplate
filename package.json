@@ -16,6 +16,7 @@
     "express": "^4.15.4",
     "nodemailer": "^4.2.0",
     "phaser-ce": "^2.9.1",
+    "pixi.js": "^4.8.0",
     "request": "^2.83.0",
     "serve-favicon": "^2.4.3",
     "three": "^0.87.1",

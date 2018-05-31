@@ -1,8 +1,7 @@
 <template lang="pug">
-  .section
-    .container
-      .row
-        h1 PIXI
+  .container.game-container
+    center
+      pixi-component
 </template>
 
 <script src='./pixi.js'></script>

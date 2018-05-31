@@ -19,7 +19,7 @@ export default {
     },
     methods: {
         init() {
-            this.loadGame('src/_threeJS/ts_demo.js');
+            this.loadGame('src/_pixi/pixi_demo.js');
         },
         loadGame(fileLocation) {
             return __awaiter(this, void 0, void 0, function* () {
@@ -28,14 +28,15 @@ export default {
                     this.game = null;
                 }
                 // load threeJS (once)
-                if (!this.store.getters._threeJSIsLoaded()) {
+                if (!this.store.getters._pixiJSIsLoaded()) {
                     yield new Promise((resolve, reject) => {
                         let js = document.createElement("script");
                         js.type = "text/javascript";
-                        js.src = `/node_modules/three/build/three.min.js`;
+                        js.src = `/node_modules/pixi.js/dist/pixi.min.js`;
                         document.body.appendChild(js);
                         js.onload = (() => {
-                            this.store.commit('setThreeJsIsLoaded', true);
+                            this.store.commit('setPixiIsLoaded', true);
+                            this.store.commit('setPhaserIsLoaded', false);
                             resolve();
                         });
                     });
@@ -51,12 +52,13 @@ export default {
                     });
                 });
                 // load new one
-                __three.init(this.$el, this, { width: 800, height: 600 });
+                __pixi.init(this.$el, this, { width: 800, height: 600 });
             });
         }
     },
     destroyed() {
+        //function PixiObject() {};
         this.game = null;
     }
 };
-//# sourceMappingURL=threeComponent.js.map
+//# sourceMappingURL=pixiComponent.js.map

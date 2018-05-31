@@ -7,16 +7,18 @@ import VueResource from 'vue-resource'
 // page components
 import {Home, About, Game, Three, Pixi} from './components/'
 // element components
-import {GameComponent, ThreeComponent, Navigation, Overlay, Header, Footer, Test} from './components/'
+import {PixiComponent, GameComponent, ThreeComponent, Navigation, Overlay, Header, Footer, Test} from './components/'
 
 
 // elements
+Vue.component('PixiComponent', PixiComponent)
 Vue.component('GameComponent', GameComponent)
 Vue.component('ThreeComponent',ThreeComponent)
 Vue.component('SiteNavigation', Navigation)
 Vue.component('SiteOverlay', Overlay)
 Vue.component('SiteHeader', Header)
 Vue.component('SiteFooter', Footer)
+
 
 // register router
 Vue.use(Router)
