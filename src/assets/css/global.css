@@ -1,20 +1,22 @@
+/*  NORMALIZE AND SKELETON CSS FOR BASIC STYLES */
 @import './normalize.css';
-@import '../../../node_modules/bulma/css/bulma.css';
+@import './skeleton.css';
+
+
+/*  BASIC CUSTOM STYLINGS */
+a, .is-cursor{
+  cursor: pointer
+}
 
 .center-text{
   text-align: center
 }
 
-.is-cursor{
-  cursor: pointer;
-}
-
 .is-bold{
   font-weight: bold;
-  color: orange;
   font-size: 1.25em;
 }
 
 .outline{
-  border: 2px solid red ;
+  border: 1px solid red ;
 }

@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "removeComments": false,
     "noImplicitAny": false,
+    "allowJs": true
   },
   "exclude": [
     "src/phaser/*",
@@ -17,5 +18,9 @@
     "node_modules",
     "typings/main",
     "typings/main.d.ts"
+  ],
+  "typeRoots": [ 
+    "typings/png.d.ts" 
   ]
+
 }

@@ -1,16 +1,6 @@
-<template lang="pug">
-  div
-    a(v-for='demo in demos' @click='loadFile(demo.file)') {{demo.title}} &nbsp;&nbsp;&nbsp;&nbsp;
-    br
-    br
-    #phaser-example
-</template>
-
-<script>
-
+declare var __phaser: any;
 
 export default {
-  name: 'gameComponent',
   props: [],
   data () {
     return {
@@ -74,9 +64,3 @@ export default {
     this.game.destroy();
   }
 }
-</script>
-
-
-<style lang="sass" scoped>
-
-</style>

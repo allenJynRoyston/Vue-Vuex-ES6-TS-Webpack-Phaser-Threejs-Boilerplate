@@ -1,8 +1,9 @@
 <template lang="pug">
   .section
     .container
-      .columns
-        h1 About
+      .row
+        h1 ABOUT
+        img(v-bind:src='testimage.default')
 </template>
 
 <script src='./about.js'></script>

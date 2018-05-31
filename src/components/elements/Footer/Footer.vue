@@ -3,21 +3,7 @@
     h3 Footer
 </template>
 
-<script>
-export default {
-  data () {
-    return {
-      store: this.$store,
-    }
-  },
-  created: function () {
-
-  },
-  methods: {
-
-  }
-}
-</script>
+<script src='./footer.js'></script>
 
 
 <style lang="sass" scoped>

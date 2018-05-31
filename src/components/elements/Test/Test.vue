@@ -3,21 +3,7 @@
     h3 TEST TEST TEST TEST TEST
 </template>
 
-<script>
-export default {
-  data () {
-    return {
-      store: this.$store,
-    }
-  },
-  created: function () {
-
-  },
-  methods: {
-
-  }
-}
-</script>
+<script src='./test.js'></script>
 
 
 <style lang="sass" scoped>

@@ -1,12 +1,6 @@
-<template lang="pug">
-    #three-example
-</template>
-
-<script>
-
+declare var __three: any;
 
 export default {
-  name: 'threeComponent',
   props: [],
   data () {
     return {
@@ -61,11 +55,3 @@ export default {
     this.game = null;
   }
 }
-</script>
-
-
-<style lang="sass" scoped>
-  #three-example
-    width: 800px
-    height: 600px
-</style>
