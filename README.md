@@ -1,9 +1,9 @@
 ## Preview
 [Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/#/)
 
-<br><br>
-## What am I?
 
+## What am I?
+A sleek, slim, and sexy Vue boilerplate project with support for ThreeJS, Pixi and Phaser already included.  Even better, they can all be utilized AT THE SAME TIME.  Several examples included within!  Build your website or webapp in half the time with this meticulously crafted and beautifully structured boilerplate today!
 
 ## Core technologies
 - [Vue 2.3.3](https://vuejs.org/) 
