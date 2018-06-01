@@ -4,7 +4,7 @@
 - [Webpack 4.x](https://webpack.js.org/)
 - [Skeleton CSS](http://getskeleton.com/)
 - [AnimeJS](http://animejs.com/)
-- [Pixi](http://www.pixijs.com/)
+- [Pixi](http://www.pixijs.com/) 
 - [Phaser](https://phaser.io/)
 - [Threejs](https://threejs.org/)
 - [Axios](https://github.com/axios/axios)
@@ -12,6 +12,12 @@
 - [Jasmine](https://jasmine.github.io/)
 - ES6/7 support (via Babel) 
 - TypeScript support
+
+### Build size
+Vue/Vuex/AnimeJS/SkeletonCSS and Axios (basically everything you'd need for modern website) are included by default.  Despite that, the total webpack bundle is approximately ~189kb.  
+
+Phaser/Pixi/ThreeJS files (and their associated dependencies) are loaded independently.  In other words, this boilerplate is very light and super fast.
+
 
 ### Preview
 [Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/#/)
@@ -141,8 +147,3 @@ Phaser and ThreeJS files (located in src/phaser and src/threeJS respectively) ca
 
 ### When to use gulp vs npm run dev
 Webpack won't instantiate the Express server, so any endpoints you build in Express will be returned as a 404.  If you run Gulp, it will start the server and load your app.  However, any changes you make to components will cause Webpack to rerun - and it is quite slow.  You only need this if you're building out endpoints, otherwise stick with npm run dev.
-
-### Build size
-Phaser/Velocity/Vue/Vuex all included.  
-
-Games built in the Phaser folder are loaded independently of the site it will not be added to the build.  You can build your own preloaders in Phaser.  
