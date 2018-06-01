@@ -36,11 +36,12 @@ $ npm run dev
 ```
 
 
-## Autocompile .TS -> .JS (optional - otherwise just edit .js files)
+## Autocompile .TS -> .JS (Optional)
 ```sh
 // open terminal on seperate instance
 $ tsc -w
 ```
+* TypeScript support is included, but if you don't want to use it you can just delete them and utilize edit the .js files directly instead.
 
 
 ## Webpack build instructions:
