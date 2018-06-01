@@ -162,10 +162,10 @@ $ npm run test
 ```
 
 
-## Build the Phaser/ThreeJS file independently
-Phaser and ThreeJS files (located in src/phaser and src/threeJS respectively) can be built independently of the app.  Think of it as the app being a console and the file being the cartridge.  This has several benefits:  
-- You can use other build tools (like Typescript) to compile to the file you want to use.  This will provide a better dev experience than vanilla javascript (at least for highly complex projects).
-- You can load games in sequence, or build smaller segments of games, and launch them in any order you need.  Think intro > cutscene > gameplay > gameover > etc etc.
+## Build the Phaser/Pixi/ThreeJS file independently
+Phaser, Pixi, and ThreeJS files can be built independently of the app.  Think of it as the app itself as being a video game console and the Phaser/Pixi/ThreeJS file being a cartridge.  This has several benefits:  
+- Your "console" and your "catridge" can be developed independently of one another.  This seperation of concern is great for developing in tandum while keeping bugs at a minimum.  
+- You can build smaller "catridges" and launch them in any order you need. For a game built in Phaser, think:  intro > cutscene > gameplay > gameover > gameplay as an example.
 
 
 ## When to use gulp vs npm run dev
