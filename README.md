@@ -1,7 +1,7 @@
 ## Preview
 [Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/#/)
 
-<br>
+<br><br>
 ## What am I?
 
 
