@@ -1,26 +1,31 @@
 ### Technologies included
 - [Vue 2.3.3](https://vuejs.org/) 
 - [Vuex 3.0](https://github.com/vuejs/vuex)
-- [Webpack 4.x](https://webpack.js.org/)
 - [Skeleton CSS](http://getskeleton.com/)
 - [AnimeJS](http://animejs.com/)
-- [Pixi](http://www.pixijs.com/) 
-- [Phaser](https://phaser.io/)
-- [Threejs](https://threejs.org/)
 - [Axios](https://github.com/axios/axios)
 - [Express 4.x](https://expressjs.com/) 
+- [Webpack 4.x](https://webpack.js.org/)
 - [Jasmine](https://jasmine.github.io/)
 - ES6/7 support (via Babel) 
 - TypeScript support
 
-### Build size
-Vue/Vuex/AnimeJS/SkeletonCSS and Axios (basically all nicities you'd need for developing a modern website/webapp) are included by default.  Despite that, the total end result bundle is approximately ~189kb.  
 
-Phaser/Pixi/ThreeJS files (and their associated dependencies) are loaded independently and only when needed.  This ensures that the project is very fast and shockingly light.
+## Optionally included
+- [Pixi](http://www.pixijs.com/) 
+- [Phaser](https://phaser.io/)
+- [Threejs](https://threejs.org/)
+
+
+### Build size
+Vue/Vuex/AnimeJS/SkeletonCSS and Axios (basically all nicities you'd need for developing a modern website/webapp) are included by default.  Despite that, the total end result bundle is approximately **~189kb**.  
+
+Phaser/Pixi/ThreeJS files (and their associated dependencies) are loaded independently and only when needed (see more details below).  This ensures that the project is **very fast and shockingly light**.
 
 
 ### Preview
 [Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/#/)
+
 
 ### Install instructions:
 ```sh
@@ -30,21 +35,25 @@ $ npm install
 $ npm run dev
 ```
 
+
 ### Autocompile .TS -> .JS (optional - otherwise just edit .js files)
 ```sh
 // open terminal on seperate instance
 $ tsc -w
 ```
 
+
 ### Webpack build instructions:
 ```sh
 $ npm run build
 ```
 
+
 ### Test deployment instructions:
 ```sh
 $ gulp
 ```
+
 
 ### Preload image assets -*optional*-
 If your site is going to be visually heavy, you can preload your images in src/App.vue.  This will automatically trigger the overlay to blur your site until anything contained in the array is fully loaded.  You can also alter the look/feel of the overlay by editing the src/components/Overlay.vue
@@ -84,6 +93,7 @@ You can disable this effect by removing these two lines of code in the src/App.v
     //this.imageLoader(this.images, this.finishedLoading)
   },
 ```
+
 
 ### Vuex store
 Vuex is included by default. You'll find it located in src/store/store.js
@@ -132,6 +142,7 @@ And watching for changes is equally as easy.  Just place this in your mounted() 
     })
   }
 ```
+
 
 ### Unit testing
 Simple to start and expand.  
