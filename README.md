@@ -1,3 +1,10 @@
+## Preview
+[Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/#/)
+
+<br>
+## What am I?
+
+
 ## Core technologies
 - [Vue 2.3.3](https://vuejs.org/) 
 - [Vuex 3.0](https://github.com/vuejs/vuex)
@@ -21,9 +28,6 @@ Vue/Vuex/AnimeJS/SkeletonCSS and Axios (basically all nicities you'd need for de
 
 Phaser/Pixi/ThreeJS files (and their associated dependencies) are loaded independently and only when needed (see more details below).  This ensures that the project is **very fast and shockingly light**.
 
-
-## Preview
-[Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/#/)
 
 
 ## Install instructions:
