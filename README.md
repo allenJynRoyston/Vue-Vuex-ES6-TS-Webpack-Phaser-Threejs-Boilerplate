@@ -14,9 +14,9 @@
 - TypeScript support
 
 ### Build size
-Vue/Vuex/AnimeJS/SkeletonCSS and Axios (basically everything you'd need for modern website) are included by default.  Despite that, the total webpack bundle is approximately ~189kb.  
+Vue/Vuex/AnimeJS/SkeletonCSS and Axios (basically all nicities you'd need for developing a modern website/webapp) are included by default.  Despite that, the total end result bundle is approximately ~189kb.  
 
-Phaser/Pixi/ThreeJS files (and their associated dependencies) are loaded independently.  In other words, this boilerplate is very light and super fast.
+Phaser/Pixi/ThreeJS files (and their associated dependencies) are loaded independently and only when needed.  This ensures that the project is very fast and shockingly light.
 
 
 ### Preview
