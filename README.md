@@ -36,7 +36,7 @@ $ npm run dev
 ```
 
 
-## Autocompile .TS -> .JS (Optional)
+## Autocompile .TS -> .JS -*optional*-
 ```sh
 // open terminal on seperate instance
 $ tsc -w
@@ -47,14 +47,17 @@ $ tsc -w
 ## Webpack build instructions:
 ```sh
 $ npm run build
+or 
+$ gulp build
 ```
 
 
 ## Test deployment instructions:
 ```sh
 $ gulp
-```
 
+// Opens up a browsers at:  http://localhost:3030/#/
+```
 
 ## Preload image assets -*optional*-
 If your site is going to be visually heavy, you can preload your images in src/App.vue.  This will automatically trigger the overlay to blur your site until anything contained in the array is fully loaded.  You can also alter the look/feel of the overlay by editing the src/components/Overlay.vue
