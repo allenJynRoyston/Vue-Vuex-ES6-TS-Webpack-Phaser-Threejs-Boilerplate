@@ -36,8 +36,7 @@ $ npm run dev
 ```
 
 
-## Autocompile .TS -> .JS 
-##### (*optional*)
+## Autocompile .TS -> .JS  ##### (*optional*)
 ```sh
 // open terminal on seperate instance
 $ tsc -w
