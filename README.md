@@ -40,7 +40,7 @@ $ npm run dev
 ```
 
 
-## Autocompile .TS -> .JS
+## Autocompile TypeScript (.ts) to JavaScript (.js)
 ##### (*optional*)
 ```sh
 // open terminal on seperate instance
