@@ -15,7 +15,7 @@
 - [Phaser](https://phaser.io/)
 - [Threejs](https://threejs.org/)
 
-<br>
+</br>
 ## Build size
 Vue/Vuex/AnimeJS/SkeletonCSS and Axios (basically all nicities you'd need for developing a modern website/webapp) are included by default.  Despite that, the total end result bundle is approximately **~189kb**.  
 
