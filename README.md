@@ -1,12 +1,17 @@
 ### Technologies included
-- Vue 2.3.3 + Vuex 3.0 (with ES6 & TypeScript support)
-- Webpack 4.x
+- [Vue 2.3.3](https://vuejs.org/) 
+- [Vuex 3.0](https://github.com/vuejs/vuex)
+- [Webpack 4.x](https://webpack.js.org/)
 - [Skeleton CSS](http://getskeleton.com/)
 - [AnimeJS](http://animejs.com/)
+- [Pixi](http://www.pixijs.com/)
 - [Phaser](https://phaser.io/)
 - [Threejs](https://threejs.org/)
-- Express 4.x 
-- Jasmine (Unit testing)
+- [Axios](https://github.com/axios/axios)
+- [Express 4.x](https://expressjs.com/) 
+- [Jasmine](https://jasmine.github.io/)
+- ES6/7 support (via Babel) 
+- TypeScript support
 
 ### Preview
 [Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/#/)
@@ -25,8 +30,7 @@ $ npm run dev
 $ tsc -w
 ```
 
-
-### Build instructions:
+### Webpack build instructions:
 ```sh
 $ npm run build
 ```
