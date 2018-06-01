@@ -1,7 +1,7 @@
 <template lang="pug">
   section
     .custom-header
-      h1 Vue/Vuex/ES6
+      h1 Boilerplate
 </template>
 
 <script src='./header.js'></script>

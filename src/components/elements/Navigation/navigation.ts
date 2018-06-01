@@ -4,46 +4,59 @@ import anime from 'animejs'
 export default {
   data () {
     return {
+      route : this.$route,
+      store: this.$store,
       logo: logo,
       headerIsOpen: null,
-      store: this.$store,
-      links:[
-        {title: 'Home', goto: '/', expand: true},
-        {title: 'About', goto: '/about', expand: false},
-        {title: 'Phaser', goto: '/phaser', expand: false},
-        {title: 'Three', goto: '/three', expand: false},
-        {title: 'Pixi', goto: '/pixi', expand: false}
-      ]
+      drawerIsOpen: null,      
+      routes: []
     }
   },
-  created() {
-    // get for init
-    this.headerIsOpen = this.store.getters._headerIsOpen()
+  mounted() {    
+    // get routes from store
+    this.routes = this.store.getters._getRoutes();
 
-    // then watch for changes
+    // set and watch header state
+    this.headerIsOpen = true //this.store.getters._headerIsOpen()
     this.store.watch(this.store.getters._headerIsOpen, val => {
       this.setHeader(val)
-    })
+    })    
+    this.setHeader(this.route.path !== '/', true)
+    
 
+    // set and watch drawer state
+    this.drawerIsOpen = this.store.getters._drawerIsOpen()
+    this.store.watch(this.store.getters._drawerIsOpen, val => {
+      this.setDrawer(val)
+    })   
+    
   },
   methods:{
-    setHeader(val) {
+    setHeader(val, instant = false) {
       this.headerIsOpen = val;
       this.store.commit('setHeader', val)
 
-      anime({
-        targets: document.querySelector('#animateme'),
-        padding: this.headerIsOpen ? '15px' : '40px',
-        backgroundColor: this.headerIsOpen ? '#2f2f2f' : '#596673',
-        duration: 500,
-      });
+      // only animate if it's not mobile
+      if(!this.store.getters._getIsMobile()){
+        anime({
+          targets: document.querySelector('#animateme'),
+          padding: val ? '40px' : '15px',
+          backgroundColor: val ? '#596673' : '#2f2f2f',
+          duration: instant ? 0 : 500,
+        });
 
-      anime({
-        targets: document.querySelector('.left-link'),
-        opacity: this.headerIsOpen ? 0 : 1,
-        duration: 500,
-        easing: 'easeInOutQuart'
-      });      
+        anime({
+          targets: document.querySelector('.left-link'),
+          opacity: val ? 1 : 0,
+          duration: instant ? 0 : 250,        
+        });   
+      }
+
+    },
+
+    setDrawer(val){
+      this.drawerIsOpen = val;
+      this.store.commit('setDrawerState', val)
     }
   }
 }

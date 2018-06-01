@@ -1,5 +1,5 @@
 <template lang="pug">
-  .u-full-width.demo-panel
+  #footer-panel.u-full-width
     h3 Footer
 </template>
 
@@ -7,10 +7,10 @@
 
 
 <style lang="sass" scoped>
-  .demo-panel
+  #footer-panel
     padding: 20px
-    overflow: hidden
-    width: 100%
+    overflow: hidden    
     background-color: black
     color: white
+    margin-top: 20px
 </style>

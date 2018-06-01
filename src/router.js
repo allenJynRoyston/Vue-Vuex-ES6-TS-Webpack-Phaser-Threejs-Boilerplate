@@ -7,10 +7,10 @@ import VueResource from 'vue-resource'
 // page components
 import {Home, About, Game, Three, Pixi} from './components/'
 // element components
-import {PixiComponent, GameComponent, ThreeComponent, Navigation, Overlay, Header, Footer, Test} from './components/'
+import {PixiComponent, GameComponent, ThreeComponent, Navigation, Overlay, Header, Footer, DrawerComponent, GridComponent, Test} from './components/'
 
 
-// elements
+// shared elements
 Vue.component('PixiComponent', PixiComponent)
 Vue.component('GameComponent', GameComponent)
 Vue.component('ThreeComponent',ThreeComponent)
@@ -18,7 +18,8 @@ Vue.component('SiteNavigation', Navigation)
 Vue.component('SiteOverlay', Overlay)
 Vue.component('SiteHeader', Header)
 Vue.component('SiteFooter', Footer)
-
+Vue.component('DrawerComponent', DrawerComponent)
+Vue.component('GridComponent', GridComponent)
 
 // register router
 Vue.use(Router)

@@ -1,12 +1,12 @@
 <template lang="pug">
-    #animateme.ui.row.nav-bar
+    #animateme.row.nav-bar    
       a.left-link(@click='setHeader(true)')
         router-link(to="/" )
           img(v-bind:src='logo.default' style='height: 80px; width: auto; margin-top: -30px')
-      a(v-for='link in links' v-on:click='setHeader(link.expand)')
-        router-link(v-bind:to="link.goto") {{link.title}}
-      a.right-link(@click='setHeader(!headerIsOpen)')
-        i(v-bind:class='headerIsOpen  ? "window restore icon" : "maximize icon"')
+      a.links(v-for='route in routes' v-on:click='setHeader(route.expand)')
+        router-link(v-bind:to="route.goto") {{route.title}}
+      a(@click='setDrawer(!drawerIsOpen)')
+       i.fas.fa-bars        
 </template>
 
 <script src='./navigation.js'></script>
@@ -17,19 +17,30 @@
     padding: 15px
     background-color: #2f2f2f
     text-align: center
+    display: flex    
+    justify-content: center 
+
   a
     font-size: 1em
-    text-decoration: none
-    margin-right: 30px
+    text-decoration: none   
     color: white
     cursor: pointer
+  
+  a:not(:last-child)
+    margin-right: 30px
+
   a:hover
     color: darkgray
+
+  a.links
+    @media only screen and (max-width: 640px) 
+      display: none
+    
   .left-link
     position: absolute
     left: 20px
     opacity: 0
-  .right-link
-    position: absolute
-    right: 20px
+    @media only screen and (max-width: 640px) 
+      display: none
+
 </style>

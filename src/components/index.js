@@ -15,3 +15,5 @@ export { default as Overlay } from './elements/Overlay/Overlay.vue';
 export { default as Header } from './elements/Header/Header.vue';
 export { default as Footer } from './elements/Footer/Footer.vue';
 export { default as Test } from './elements/Test/Test.vue';
+export { default as DrawerComponent } from './elements/Drawers/Drawers.vue';
+export { default as GridComponent } from './elements/Grid/Grid.vue';
