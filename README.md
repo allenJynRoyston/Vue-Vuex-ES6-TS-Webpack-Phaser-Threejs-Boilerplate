@@ -10,23 +10,23 @@
 - ES6/7 support (via Babel) 
 - TypeScript support
 
-
+<br><br>
 #### Optionally included
 - [Pixi](http://www.pixijs.com/) 
 - [Phaser](https://phaser.io/)
 - [Threejs](https://threejs.org/)
 
-
+<br><br>
 ## Build size
 Vue/Vuex/AnimeJS/SkeletonCSS and Axios (basically all nicities you'd need for developing a modern website/webapp) are included by default.  Despite that, the total end result bundle is approximately **~189kb**.  
 
 Phaser/Pixi/ThreeJS files (and their associated dependencies) are loaded independently and only when needed (see more details below).  This ensures that the project is **very fast and shockingly light**.
 
-
+<br><br>
 ## Preview
 [Click here](https://vue-vuex-es6-webpack-phaser-bp.herokuapp.com/#/)
 
-
+<br><br>
 ## Install instructions:
 ```sh
 $ git clone https://github.com/allenRoyston/Vue-Vuex-ES6-TS-Webpack-Phaser-Threejs-Boilerplate.git
@@ -35,7 +35,7 @@ $ npm install
 $ npm run dev
 ```
 
-
+<br><br>
 ## Autocompile .TS -> .JS  ##### (*optional*)
 ```sh
 // open terminal on seperate instance
@@ -43,7 +43,7 @@ $ tsc -w
 ```
 * TypeScript support is included, but if you don't want to use it you can just delete them and utilize edit the .js files directly instead.
 
-
+<br><br>
 ## Webpack build instructions:
 ```sh
 $ npm run build
@@ -51,7 +51,7 @@ or
 $ gulp build
 ```
 
-
+<br><br>
 ## Test deployment instructions:
 ```sh
 $ gulp
@@ -59,6 +59,7 @@ $ gulp
 // Opens up a browsers at:  http://localhost:3030/#/
 ```
 
+<br><br>
 ## Preload image assets
 ##### (*optional*)
 If your site is going to be visually heavy, you can preload your images in src/App.vue.  This will automatically trigger the overlay to blur your site until anything contained in the array is fully loaded.  You can also alter the look/feel of the overlay by editing the src/components/Overlay.vue
@@ -99,7 +100,7 @@ You can disable this effect by removing these two lines of code in the src/App.v
   },
 ```
 
-
+<br><br>
 ## Vuex store
 Vuex is included by default. You'll find it located in src/store/store.js
 You'll find adding to or removing properties from the Store is easy.  
@@ -148,18 +149,19 @@ And watching for changes is equally as easy.  Just place this in your mounted() 
   }
 ```
 
-
+<br><br>
 ## Unit testing
 Simple to start and expand.  
 ```
 $ npm run test
 ```
 
+<br><br>
 ## Build the Phaser/ThreeJS file independently
 Phaser and ThreeJS files (located in src/phaser and src/threeJS respectively) can be built independently of the app.  Think of it as the app being a console and the file being the cartridge.  This has several benefits:  
 - You can use other build tools (like Typescript) to compile to the file you want to use.  This will provide a better dev experience than vanilla javascript (at least for highly complex projects).
 - You can load games in sequence, or build smaller segments of games, and launch them in any order you need.  Think intro > cutscene > gameplay > gameover > etc etc.
 
-
+<br><br>
 ## When to use gulp vs npm run dev
 Webpack won't instantiate the Express server, so any endpoints you build in Express will be returned as a 404.  If you run Gulp, it will start the server and load your app.  However, any changes you make to components will cause Webpack to rerun - and it is quite slow.  You only need this if you're building out endpoints, otherwise stick with npm run dev.
