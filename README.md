@@ -1,4 +1,4 @@
-## Technologies included
+## Core technologies
 - [Vue 2.3.3](https://vuejs.org/) 
 - [Vuex 3.0](https://github.com/vuejs/vuex)
 - [Skeleton CSS](http://getskeleton.com/)
@@ -11,7 +11,7 @@
 - TypeScript support
 
 
-### Optionally included
+#### Optionally included
 - [Pixi](http://www.pixijs.com/) 
 - [Phaser](https://phaser.io/)
 - [Threejs](https://threejs.org/)
