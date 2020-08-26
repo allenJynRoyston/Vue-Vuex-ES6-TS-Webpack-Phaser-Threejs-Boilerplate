@@ -6,27 +6,29 @@ export default {
     return {
       route : this.$route,
       store: this.$store,
-      logo: logo,
-      headerIsOpen: null,
+      logo,
+      headerIsOpen: true,
       drawerIsOpen: null,      
       routes: []
     }
   },
   mounted() {    
+    const {store, route} = this;
+    const {getters} = store;
+
     // get routes from store
-    this.routes = this.store.getters._getRoutes();
+    this.routes = getters._getRoutes();
 
     // set and watch header state
-    this.headerIsOpen = true //this.store.getters._headerIsOpen()
-    this.store.watch(this.store.getters._headerIsOpen, val => {
+    this.store.watch(getters._headerIsOpen, val => {
       this.setHeader(val)
     })    
-    this.setHeader(this.route.path !== '/', true)
+    this.setHeader(route.path !== '/', true)
     
 
     // set and watch drawer state
-    this.drawerIsOpen = this.store.getters._drawerIsOpen()
-    this.store.watch(this.store.getters._drawerIsOpen, val => {
+    this.drawerIsOpen = getters._drawerIsOpen()
+    this.store.watch(getters._drawerIsOpen, val => {
       this.setDrawer(val)
     })   
     

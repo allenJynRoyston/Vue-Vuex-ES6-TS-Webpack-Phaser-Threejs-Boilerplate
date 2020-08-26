@@ -14,10 +14,24 @@
   "exclude": [
     "src/phaser/*",
     "build",
-    "lib",
-    "node_modules",
+    "test",
+    "lib",    
+    "node_modules",    
     "typings/main",
-    "typings/main.d.ts"
+    "typings/main.d.ts",
+    "webpack.development.js",
+    "webpack.production.js",    
+    "webpack.common.js",
+    "bsync.js",
+    "gulpfile.js",
+    "karma.conf.js",
+    "server.js",
+    "src/_phaser",
+    "src/_threeJS",
+    "src/assets",
+    "src/components/index.js",
+    "src/main.js",
+    "src/router.js"
   ],
   "typeRoots": [ 
     "typings/png.d.ts" 
