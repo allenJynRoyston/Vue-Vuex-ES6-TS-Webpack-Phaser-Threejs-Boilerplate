@@ -7,8 +7,8 @@ A sleek, slim, and sexy Vue boilerplate project with support for ThreeJS, Pixi a
 
 
 ## Core technologies
-- [Vue 2.3.3](https://vuejs.org/) 
-- [Vuex 3.0](https://github.com/vuejs/vuex)
+- [Vue 2.x](https://vuejs.org/) 
+- [Vuex 3.x](https://github.com/vuejs/vuex)
 - [Skeleton CSS](http://getskeleton.com/)
 - [AnimeJS](http://animejs.com/)
 - [Axios](https://github.com/axios/axios)
